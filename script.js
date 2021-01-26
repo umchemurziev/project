@@ -30,11 +30,16 @@ ctx.font = "20px Arial"; // Рисуем y
 ctx.fillStyle = "black";
 ctx.fillText("y", canvas.width/2+20, 0+25);
 
+function draw(a, b, c) {
+	for(var i=-20;i<20;i+=0.01){
+     ctx.fillStyle="blue"; // цвет квадратической параболы
+     ctx.fillRect(200+i*10,ctx.height-(Math.pow(i,2)*a+i*b+c),1,1);
+     }
+}
 
-
-
-// for(var i=-20;i<20;i+=0.01){
-//     ctx.fillStyle="blue"; // цвет квадратической параболы
-//     ctx.fillRect(200+i*10,250-Math.pow(i,2),1,1);
-// }
+console.log(a.value);
+buttom.onclick = () => {
+	console.log(a.value);
+	draw(a.value, b.value ,c.value);
+}
 

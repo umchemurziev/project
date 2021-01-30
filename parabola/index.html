@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang=ru>
+
+<head>
+  <title>project</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="style.css">
+  <script type="text/javascript" language="javascript">
+  </script>
+</head>
+
+<body>
+  <div class="cdraw">
+    <h2 class="section">
+      Рисую параболу!
+    </h2>
+    <canvas id=canvas width=400px height=500px style="background:white"></canvas>
+    <h3 class="section">
+      Введите параметры:
+    </h3>
+
+    <form action="" method="get">
+      <div class="counts">
+        <label>
+          a = <input type="text" name="a" class="input_counts input_a" required>
+        </label>
+        <label>
+          b = <input type="text" name="b" class="input_counts input_b" required>
+        </label>
+        <label>
+          c = <input type="text" name="c" class="input_counts input_c" required>
+        </label>
+      </div>
+      <input type="submit" name="submit" value="submit" id="submit">
+    </form>
+
+  </div>
+
+  <script type="text/javascript" src="script.js"></script>
+</body>
+<html>

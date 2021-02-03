@@ -1,41 +1,78 @@
 <!DOCTYPE html>
-<html lang=ru>
-
+<html lang="en">
 <head>
-  <title>project</title>
-  <meta charset="utf-8">
-  <link rel="stylesheet" href="style.css">
-  <script type="text/javascript" language="javascript">
-  </script>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="style.css">
+    <title>project</title>
 </head>
-
 <body>
-  <div class="cdraw">
-    <h2 class="section">
-      Рисую параболу!
-    </h2>
-    <canvas id=canvas width=400px height=500px style="background:white"></canvas>
-    <h3 class="section">
-      Введите параметры:
-    </h3>
+    <header class="header">
+        <div class="name_of_page">
+            <h1>HSE Project</h1>
+        </div>
+        <div class="author"><p>Umar Chemurziev</p></div>
+    </header>
 
-    <form action="" method="get">
-      <div class="counts">
-        <label>
-          a = <input type="text" name="a" class="input_counts input_a" required>
-        </label>
-        <label>
-          b = <input type="text" name="b" class="input_counts input_b" required>
-        </label>
-        <label>
-          c = <input type="text" name="c" class="input_counts input_c" required>
-        </label>
-      </div>
-      <input type="submit" name="submit" value="submit" id="submit">
-    </form>
+    <main class="page">
+        <section class="panel">
+            
+            <button id="NFA" class="panel__btn panel__btn--active">НКА</button>
+            <button id="DFA" class="panel__btn">ДКА</button>
+        </section>
+        <div class="line1"></div>
 
-  </div>
+        <section class="automaton">
+            <sectoin class="automaton__pict">
+                <img src="images/NFA.png" alt="NFA">
+            </sectoin>
 
-  <script type="text/javascript" src="script.js"></script>
+            <section class="automaton__code">
+                <h1>Code</h1>
+            </section>
+        </section>
+
+        <section class="button-nfa-to-dfa">
+            <button id="button-nfa-to-dfa">Перестроить в ДКА</button>
+        </section>
+
+        <section class="draw_form">
+            <form>
+                <div id="left_form" class="up_form">
+                    <input id="from" class="from" placeholder="откуда">
+                    <input id="to" class="to" placeholder="куда">
+                    <input id="symb" class="symb" placeholder="символ перехода">
+                    <button id="draw_form__add" class="draw_form__add">Добавить</button>
+                </div>
+                <div id="right_form" class="bottom_form">
+                    <button id="delete" class="delete">Удалить</button>
+                    <button id="end_draw" class="end_draw">Построить</button>
+                </div>
+            </form>
+        </section>
+        <section class="ps">
+            <h3>Примечание</h3>
+            <p>
+                Тут будет написано, как пользоваться сайтом и тп.
+                На время шаблона использую это поле для описания сайта:
+                планируется анимация работы автомата, попробую реализовать
+                гибкий псевдокод (будет меняться в зависимости от автомата)
+                и подсветку исполняемой строки кода. Так же будет диалоговое окно,
+                которое откроется по нажатию иконки чата, где можно будет задать вопрос.
+            </p>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <hr>
+        <div class="logo-cp">
+            <div id="logo" class="logo">
+                <span>LOGO</span>
+            </div>
+            <div id="copyright" class="copyright">
+                <p>copyright:</p>
+            </div>
+        </div>
+    </footer>
+    <script src="script.js"></script>
 </body>
-<html>
+</html>

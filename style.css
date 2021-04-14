@@ -6,6 +6,10 @@ font-family: 'Kaushan Script', cursive;
 font-family: 'Montserrat Alternates', sans-serif;
 */
 
+canvas {
+    width: 100%;
+    height: 100%;
+}
 
 body {
     min-height: 100vh;
@@ -178,6 +182,10 @@ body {
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
+}
+
+.footer .logo-cp .logo {
+    margin-left: 5px;
 }
 
 .invisible {

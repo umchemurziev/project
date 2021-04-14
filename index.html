@@ -15,7 +15,6 @@
 
     <main class="page">
         <section class="panel">
-            
             <button id="NFA" class="panel__btn panel__btn--active">НКА</button>
             <button id="DFA" class="panel__btn">ДКА</button>
         </section>
@@ -23,7 +22,8 @@
 
         <section class="automaton">
             <sectoin class="automaton__pict">
-                <img src="images/NFA.png" alt="NFA">
+<!--                <img src="images/NFA.png" alt="NFA">-->
+                <canvas id="viewport" width="800" height="600"></canvas>
             </sectoin>
 
             <section class="automaton__code">
@@ -73,6 +73,9 @@
             </div>
         </div>
     </footer>
+    <script src="libs/jquery.min.js"></script>
+    <script src="libs/arbor.js"></script>
+    <script src="main.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

@@ -36,3 +36,4 @@ DFA.onclick = () => {
 button_nfa_to_dfa.onclick = () => {
     change_page(NFA, DFA);
 }
+

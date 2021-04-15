@@ -121,9 +121,16 @@ body {
 }
 
 .page .automaton .automaton__code {
-    width: 49%;
+    width: 24%;
     height: 100%;
     background-color: rgba(128, 255, 0, 0.5);
+    border: 2px solid black;
+    overflow: scroll;
+}
+.page .automaton .automaton__code2 {
+    width: 24%;
+    height: 100%;
+    background-color: white;
     border: 2px solid black;
     overflow: scroll;
 }

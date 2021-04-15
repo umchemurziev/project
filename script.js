@@ -38,16 +38,49 @@ button_nfa_to_dfa.onclick = () => {
 }
 
 
+// Храним ребра и вершины
 let data = {
     nodes: [],
     edges: []
 };
 
 
+// Храним ребра и символы перехода
 let edges_symbols = [];
 
+
+// "Добавить" работает толоко если все ввести
+$(".from").blur(() => {
+    if ($(".from").val() && $(".to").val() && $(".symb").val()) {
+        $(".draw_form__add").prop('disabled', false);
+    } else {
+        $(".draw_form__add").prop('disabled', true);
+    }
+});
+$(".to").blur(() => {
+    if ($(".from").val() && $(".to").val() && $(".symb").val()) {
+        $(".draw_form__add").prop('disabled', false);
+    } else {
+        $(".draw_form__add").prop('disabled', true);
+    }
+});
+$(".symb").blur(() => {
+    if ($(".from").val() && $(".to").val() && $(".symb").val()) {
+        $(".draw_form__add").prop('disabled', false);
+    } else {
+        $(".draw_form__add").prop('disabled', true);
+    }
+});
+
+
+
+// "Кнопка добавить"
 $(".draw_form__add").click((evt) => {
     evt.preventDefault();
+    $(".draw_form__add").prop('disabled', true); // Делаем кнопку "Добавить" недоступной
+
+
+    // Добавляем новые символы перехода
     let flag = true;
     for (let i = 0; i < edges_symbols.length; i++) {
         if (edges_symbols[i].split(":")[0] == $(".from").val() && edges_symbols[i].split(":")[1] == $(".to").val()) {
@@ -63,10 +96,10 @@ $(".draw_form__add").click((evt) => {
     }
 
 
-    $(".automaton__code").append(`<h1>Из ${$(".from").val()} в ${$(".to").val()} по символам: ${$(".symb").val()}</h1>`);
+    $(".automaton__code").append(`<h1>Из ${$(".from").val()} в ${$(".to").val()} по символам: ${$(".symb").val()}</h1>`); // Печатаем ребро
 
 
-    // NODES1
+    // NODES1 Добавлеение вершины from
     let f = true;
     for (let i = 0; i < data.nodes.length; i++) {
         if ($(".from").val() == data.nodes[i].name) {
@@ -74,12 +107,11 @@ $(".draw_form__add").click((evt) => {
             break;
         }
     }
-
     if (f) {
         data.nodes.push({ name: $(".from").val() });
     }
 
-    // NODES2
+    // NODES2 Добавление вершины to
     let g = true;
     for (let i = 0; i < data.nodes.length; i++) {
         if ($(".to").val() == data.nodes[i].name) {
@@ -87,7 +119,6 @@ $(".draw_form__add").click((evt) => {
             break;
         }
     }
-
     if (g) {
         data.nodes.push({ name: $(".to").val() });
     }
@@ -99,7 +130,6 @@ $(".draw_form__add").click((evt) => {
     })
 
     // Обнуление 
-
     $(".from").val("");
     $(".to").val("");
     $(".symb").val("");
@@ -111,21 +141,17 @@ let edges_done = [];
 
 let rev_edges = [];
 
-$(".end_draw").click((evt) => {
+$(".end_draw").click((evt) => { // Построить
     evt.preventDefault();
     createCanvas(this.jQuery);
 });
 
 function createCanvas($) {
-    let Umar = false;
-    let UmarChemurziev = false;
+    let exit1 = false;
+    let exit2 = false;
 
     let del = false;
     let del2 = false;
-
-    function getRadians(degrees) {
-        return (Math.PI / 180) * degrees;
-    }
 
     var Renderer = function (canvas) {
         var canvas = $(canvas).get(0);
@@ -144,11 +170,11 @@ function createCanvas($) {
             redraw: function () {
                 $(".end_draw").click((evt) => {
                     evt.preventDefault();
-                    Umar = true;
+                    exit1 = true;
                 });
 
-                if (Umar) {
-                    UmarChemurziev = true;
+                if (exit1) {
+                    exit2 = true;
                     return;
                 }
 
@@ -393,7 +419,7 @@ function createCanvas($) {
 
     })
 
-    if (UmarChemurziev) {
+    if (exit2) {
         return;
     }
 

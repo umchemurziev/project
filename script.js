@@ -192,9 +192,6 @@ function createCanvas($) {
                         } else if (!$(mas_cb[i]).is(':checked') && terms.includes($(mas_cb[i]).attr("name"))) {
                             terms.splice(terms.indexOf($(mas_cb[i]).attr("name")), 1);
                         }
-                        // else {
-                        // terms.splice(terms.indexOf($(mas_cb[i]).attr("name")), 1);
-                        // }
                     })
                 }
 
@@ -215,8 +212,10 @@ function createCanvas($) {
                         edges: []
                     };
                     edges_symbols = [];
+                    nodes_names.clear();
                     del = true;
                     $(".automaton__code").html(`<h1>Ребра:</h1>`);
+                    $(".automaton__code2").html(`<h1>Какие состояния конечные?</h1>`);
                 });
 
                 if (del) {
@@ -252,10 +251,8 @@ function createCanvas($) {
                             var angle = Math.atan2(0, 0);
                             ctx.moveTo(pt.x + 12, pt.y - 6);
                             ctx.lineTo(pt.x + 10, pt.y - 15)
-                            // context.lineTo((x - headlen * Math.cos(angle - Math.PI / 6)), y - headlen * Math.sin(angle - Math.PI / 6));
                             ctx.moveTo(pt.x + 12, pt.y - 6);
                             ctx.lineTo(pt.x + 20, pt.y - 10);
-                            // context.lineTo(x + 10 - headlen * Math.cos(angle + Math.PI / 6), y - headlen * Math.sin(angle + Math.PI / 6));
                             ctx.stroke();
 
                             let symbols = "";
@@ -268,9 +265,6 @@ function createCanvas($) {
                             ctx.fillStyle = "black"; //цвет для шрифта
                             ctx.font = 'italic 16px sans-serif'; //шрифт
                             ctx.fillText(symbols, pt.x - 15, pt.y - 33); //пишем имя у каждой точки
-
-                            // ctx.strokeStyle = "rgba(0,0,0, 0.5)"; //грани будут чёрным цветом с некой прозрачностью
-                            // ctx.lineWidth = 1; //толщиной в один пиксель
 
                         }
 
@@ -418,12 +412,9 @@ function createCanvas($) {
     }
 
     $(document).ready(function () {
-        // sys = arbor.ParticleSystem({ friction: 0, stiffness: 600, repulsion: 1000 }); // создаём систему
 
-        // arbor.ParticleSystem({ friction: 1 })
         sys = arbor.ParticleSystem(1000, 600, 0.5, false, 55, 0.02, 0.6);
 
-        // sys.parameters({ gravity: false }); // гравитация вкл
         sys.renderer = Renderer("#viewport"); //начинаем рисовать в выбраной области
 
         (() => {
@@ -436,16 +427,6 @@ function createCanvas($) {
             });
         })();
 
-        // $.getJSON("data.json", //получаем с сервера файл с данными
-        // 	function (data) {
-        // 		$.each(data.nodes, function (i, node) {
-        // 			sys.addNode(node.name); //добавляем вершину
-        // 		});
-
-        // 		$.each(data.edges, function (i, edge) {
-        // 			sys.addEdge(sys.getNode(edge.src), sys.getNode(edge.dest)); //добавляем грань
-        // 		});
-        // 	});
 
     })
 

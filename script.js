@@ -154,6 +154,11 @@ function createCanvas($) {
 
                 $(".delete").click((evt) => {
                     evt.preventDefault();
+                    data = {
+                        nodes: [],
+                        edges: []
+                    };
+                    edges_symbols = [];
                     del = true;
                     $(".automaton__code").text("<h1>Ребра:</h1>");
                 });

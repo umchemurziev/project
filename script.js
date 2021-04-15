@@ -38,6 +38,8 @@ button_nfa_to_dfa.onclick = () => {
 }
 
 
+let nodes_names = new Set();
+
 // Храним ребра и вершины
 let data = {
     nodes: [],
@@ -79,6 +81,20 @@ $(".draw_form__add").click((evt) => {
     evt.preventDefault();
     $(".draw_form__add").prop('disabled', true); // Делаем кнопку "Добавить" недоступной
 
+    if (!nodes_names.has($(".from").val())) {
+        $(".automaton__code2").append(
+            `<label>${$(".from").val()}<input type="checkbox" class="checkbox" name="${$(".from").val()}"></input></label><br>`
+        );
+    }
+
+    if (!nodes_names.has($(".to").val())) {
+        $(".automaton__code2").append(
+            `<label>${$(".to").val()}<input type="checkbox" class="checkbox" name="${$(".to").val()}"></input></label><br>`
+        );
+    }
+
+    nodes_names.add($(".from").val());
+    nodes_names.add($(".to").val());
 
     // Добавляем новые символы перехода
     let flag = true;
@@ -168,6 +184,20 @@ function createCanvas($) {
             },
 
             redraw: function () {
+                let mas_cb = $(".checkbox");
+                for (let i = 0; i < mas_cb.length; i++) {
+                    $(mas_cb[i]).change(() => {
+                        if ($(mas_cb[i]).is(':checked') && !terms.includes($(mas_cb[i]).attr("name"))) {
+                            terms.push($(mas_cb[i]).attr("name"));
+                        } else if (!$(mas_cb[i]).is(':checked') && terms.includes($(mas_cb[i]).attr("name"))) {
+                            terms.splice(terms.indexOf($(mas_cb[i]).attr("name")), 1);
+                        }
+                        // else {
+                        // terms.splice(terms.indexOf($(mas_cb[i]).attr("name")), 1);
+                        // }
+                    })
+                }
+
                 $(".end_draw").click((evt) => {
                     evt.preventDefault();
                     exit1 = true;

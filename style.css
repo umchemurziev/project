@@ -127,12 +127,21 @@ body {
     border: 2px solid black;
     overflow: scroll;
 }
+
+.page .automaton .automaton__code > * {
+    padding-left: 20px;
+}
+
 .page .automaton .automaton__code2 {
     width: 24%;
     height: 100%;
     background-color: white;
     border: 2px solid black;
     overflow: scroll;
+}
+
+.page .automaton .automaton__code2 > * {
+    padding-left: 20px;
 }
 
 /* button-nfa-to-dfa */

@@ -21,7 +21,7 @@ let change_page = (page_from, page_to) => {
         is_NFA_page = true;
         is_DFA_page = false;
         button_nfa_to_dfa.classList.remove("invisible");
-        automaton__pict.innerHTML = `<img src="images/NFA.png" alt="NFA">`;
+        automaton__pict.innerHTML = `<canvas id="viewport" width="800" height="400"></canvas>`;
     }
 }
 
@@ -160,7 +160,7 @@ function createCanvas($) {
                     };
                     edges_symbols = [];
                     del = true;
-                    $(".automaton__code").text("<h1>Ребра:</h1>");
+                    $(".automaton__code").html(`<h1>Ребра:</h1>`);
                 });
 
                 if (del) {
@@ -210,7 +210,7 @@ function createCanvas($) {
                                 }
                             }
                             ctx.fillStyle = "black"; //цвет для шрифта
-                            ctx.font = 'italic 13px sans-serif'; //шрифт
+                            ctx.font = 'italic 16px sans-serif'; //шрифт
                             ctx.fillText(symbols, pt.x - 15, pt.y - 33); //пишем имя у каждой точки
 
                             // ctx.strokeStyle = "rgba(0,0,0, 0.5)"; //грани будут чёрным цветом с некой прозрачностью
@@ -245,7 +245,7 @@ function createCanvas($) {
                                 ctx.stroke();
 
                                 ctx.fillStyle = "red"; //цвет для шрифта
-                                ctx.font = 'italic 13px sans-serif'; //шрифт
+                                ctx.font = 'italic 16px sans-serif'; //шрифт
                                 ctx.fillText(symbols, (from.x + to.x) / 2, (from.y + to.y) / 2 + 10); //пишем имя у каждой точки
 
                                 let rev_temp = edge.target.name + ":" + edge.source.name;
@@ -267,7 +267,7 @@ function createCanvas($) {
                                 ctx.stroke();
 
                                 ctx.fillStyle = "green"; //цвет для шрифта
-                                ctx.font = 'italic 13px sans-serif'; //шрифт
+                                ctx.font = 'italic 16px sans-serif'; //шрифт
                                 ctx.fillText(symbols, (from.x + to.x) / 2, (from.y + to.y) / 2 - 10); //пишем имя у каждой точки
                             } else {
                                 ctx.strokeStyle = "rgba(0,0,0, 0.5)"; //грани будут черный цветом с некой прозрачностью
@@ -281,7 +281,7 @@ function createCanvas($) {
                                 ctx.stroke();
 
                                 ctx.fillStyle = "black"; //цвет для шрифта
-                                ctx.font = 'italic 13px sans-serif'; //шрифт
+                                ctx.font = 'italic 16px sans-serif'; //шрифт
                                 ctx.fillText(symbols, (from.x + to.x) / 2, (from.y + to.y) / 2); //пишем имя у каждой точки
                             }
 
@@ -296,12 +296,15 @@ function createCanvas($) {
 
                 particleSystem.eachNode( //теперь каждую вершину
                     function (node, pt) {  //получаем вершину и точку где она
+
                         var w = 10;   //ширина квадрата
 
                         ctx.beginPath();
                         ctx.arc(pt.x, pt.y, w, 0, 2 * Math.PI);
                         if (terms.includes(node.name)) {
                             ctx.fillStyle = "#00ff00";
+                        } else if (data.nodes[0].name == node.name) {
+                            ctx.fillStyle = "#ff0000";
                         } else {
                             ctx.fillStyle = "#109bfc";
                         }
@@ -309,8 +312,8 @@ function createCanvas($) {
                         ctx.stroke();
 
                         ctx.fillStyle = "black"; //цвет для шрифта
-                        ctx.font = 'italic 13px sans-serif'; //шрифт
-                        ctx.fillText(node.name, pt.x + 8, pt.y + 8); //пишем имя у каждой точки
+                        ctx.font = 'italic 16px sans-serif'; //шрифт
+                        ctx.fillText(node.name, pt.x + 10, pt.y + 8); //пишем имя у каждой точки
                     });
 
             },

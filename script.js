@@ -9,6 +9,38 @@ let NFA = document.querySelector("#NFA");
 let DFA = document.querySelector("#DFA");
 let button_nfa_to_dfa = document.querySelector("#button-nfa-to-dfa");
 
+
+let nodes_names = new Set();
+
+// Храним ребра и вершины
+let data = {
+    nodes: [],
+    edges: []
+};
+
+
+// Храним ребра и символы перехода
+let edges_symbols = [];
+let edges_symbols_DFA = [];
+
+let alphabet = new Set();
+
+let P = [];
+let Q_d = [];
+
+
+// Cигма автомата
+let sigma = (from, symb) => {
+    let temp = [];
+    for (let i = 0; i < edges_symbols.length; ++i) {
+        if (edges_symbols[i].split(":")[2].split(", ").includes(symb) && edges_symbols[i].split(":")[0] == from) {
+            temp.push(edges_symbols[i].split(":")[1]);
+        }
+    }
+    return temp;
+}
+
+
 let change_page = (page_from, page_to) => {
     page_from.classList.remove("panel__btn--active");
     page_to.classList.add("panel__btn--active");
@@ -35,38 +67,46 @@ DFA.onclick = () => {
 
 button_nfa_to_dfa.onclick = () => {
     change_page(NFA, DFA);
+
+    let s = data.nodes[0].name;
+    P.push([s]);
+    Q_d = [];
+    // while (P.length) {
+    //     let p_d = P[0];
+    //     P.shift();
+    //     for (let c of alphabet) {
+    //         let q_d = [];
+    //         for (let p of p_d) {
+    //             let tt = sigma(p, c);
+    //             if (tt.length) {q_d.push(tt);}
+    //         }
+    //         edges_symbols_DFA.push([p_d, q_d, c]);
+    //         if (!Q_d.includes(q_d) && q_d.length) {
+    //             P.push(q_d);
+    //             Q_d.push(q_d);
+    //         }
+    //     }
+    // }
+    console.log(edges_symbols_DFA);
 }
 
 
-let nodes_names = new Set();
-
-// Храним ребра и вершины
-let data = {
-    nodes: [],
-    edges: []
-};
-
-
-// Храним ребра и символы перехода
-let edges_symbols = [];
-
-
 // "Добавить" работает толоко если все ввести
-$(".from").blur(() => {
+$(".from").change(() => {
     if ($(".from").val() && $(".to").val() && $(".symb").val()) {
         $(".draw_form__add").prop('disabled', false);
     } else {
         $(".draw_form__add").prop('disabled', true);
     }
 });
-$(".to").blur(() => {
+$(".to").change(() => {
     if ($(".from").val() && $(".to").val() && $(".symb").val()) {
         $(".draw_form__add").prop('disabled', false);
     } else {
         $(".draw_form__add").prop('disabled', true);
     }
 });
-$(".symb").blur(() => {
+$(".symb").change(() => {
     if ($(".from").val() && $(".to").val() && $(".symb").val()) {
         $(".draw_form__add").prop('disabled', false);
     } else {
@@ -86,6 +126,7 @@ $(".draw_form__add").click((evt) => {
             `<label>${$(".from").val()}<input type="checkbox" class="checkbox" name="${$(".from").val()}"></input></label><br>`
         );
     }
+    nodes_names.add($(".from").val());
 
     if (!nodes_names.has($(".to").val())) {
         $(".automaton__code2").append(
@@ -93,8 +134,8 @@ $(".draw_form__add").click((evt) => {
         );
     }
 
-    nodes_names.add($(".from").val());
     nodes_names.add($(".to").val());
+    alphabet.add($(".symb").val());
 
     // Добавляем новые символы перехода
     let flag = true;

@@ -107,6 +107,12 @@ let build_DFA = (automaton_NFA) => {
         edges_done : [],
         // Обратные ребра
         rev_edges : [],
+
+        names_ind : 0, // индекс для названия вершин
+        nodes_pair : new Map(), // название вершины - из каких состоит
+        nodes_pair2 : new Map(), // из каких состоит - название вершины
+        normal_edges_symbols : [], // как в NFA
+        first_names : [], // для первых назв верш
     }
     let s = allEpsilon(automaton_NFA.data.nodes[0].name);
     let P;
@@ -152,11 +158,69 @@ let build_DFA = (automaton_NFA) => {
                 }
             }
             let tutu = [p_d_str, q_d_str, c];
-            if (q_d.size) automaton_DFA.edges_symbols.push(tutu);
-            console.log(tutu);
+            if (q_d.size) {
+                let flag = true;
+                for (let i = 0; i < automaton_DFA.edges_symbols.length; ++i) {
+                    if (automaton_DFA.edges_symbols[i][0] === p_d_str && automaton_DFA.edges_symbols[i][1] === q_d_str) {
+                        automaton_DFA.edges_symbols[i][2] += ", " + c;
+                        flag = false;
+                    }
+                }
+                if (flag) automaton_DFA.edges_symbols.push(tutu);
+            }
+            // console.log(tutu);
             if (!Q_d.includes(q_d_str) && q_d.size) {
                 P.push(q_d);
                 Q_d.push(q_d_str);
+            }
+        }
+    }
+    for (let nods of automaton_DFA.edges_symbols) {
+        if (!automaton_DFA.first_names.includes(nods[0])) {
+            automaton_DFA.first_names.push(nods[0]);
+            if (automaton_DFA.names_ind) {
+                automaton_DFA.nodes_pair.set("q" + automaton_DFA.names_ind, nods[0]);
+                automaton_DFA.nodes_names.add("q" + automaton_DFA.names_ind);
+                automaton_DFA.nodes_pair2.set(nods[0], "q" + automaton_DFA.names_ind);
+                automaton_DFA.data.nodes.push({ name: "q" + automaton_DFA.names_ind });
+                automaton_DFA.names_ind += 1;
+            } else {
+                automaton_DFA.nodes_pair.set("S", nods[0]);
+                automaton_DFA.nodes_names.add("S");
+                automaton_DFA.nodes_pair2.set(nods[0], "S");
+                automaton_DFA.data.nodes.push({ name: "S" });
+            }
+        }
+        if (!automaton_DFA.first_names.includes(nods[1])) {
+            automaton_DFA.first_names.push(nods[1]);
+            automaton_DFA.names_ind += 1;
+            automaton_DFA.nodes_pair.set("q" + automaton_DFA.names_ind, nods[1]);
+            automaton_DFA.nodes_names.add("q" + automaton_DFA.names_ind);
+            automaton_DFA.nodes_pair2.set(nods[1], "q" + automaton_DFA.names_ind);
+            automaton_DFA.data.nodes.push({ name: "q" + automaton_DFA.names_ind} );
+        }
+        automaton_DFA.alphabet = automaton_NFA.alphabet;
+        let temp_edge = {
+            src: automaton_DFA.nodes_pair2.get(nods[0]),
+            dest: automaton_DFA.nodes_pair2.get(nods[1]),
+        }
+        if (!automaton_DFA.data.edges.includes(temp_edge)) {
+            automaton_DFA.data.edges.push(temp_edge);
+        }
+    }
+    for (let edge_symbols of automaton_DFA.edges_symbols) {
+        let str_edge_symbols = automaton_DFA.nodes_pair2.get(edge_symbols[0]) + ":" + automaton_DFA.nodes_pair2.get(edge_symbols[1]) + ":" + edge_symbols[2];
+        automaton_DFA.normal_edges_symbols.push(str_edge_symbols);
+    }
+
+    for (let nod of automaton_DFA.nodes_names) {
+
+        let nod2 = automaton_DFA.nodes_pair.get(nod).split(":");
+        if (nod2) {
+            for (let nod3 of nod2) {
+                if (automaton_NFA.terms.includes(nod3)) {
+                    automaton_DFA.terms.push(nod);
+                }
             }
         }
     }
@@ -167,8 +231,12 @@ let build_DFA = (automaton_NFA) => {
 $(web_site.button_nfa_to_dfa).click(() => {
     change_page(web_site.NFA, web_site.DFA);
     automaton_DFA = build_DFA(automaton_NFA);
+    // automaton_NFA.data.edges += automaton_DFA.data.edges;
+    // automaton_NFA.data.nodes += automaton_DFA.data.nodes;
+    // automaton_NFA.edges_symbols += automaton_DFA.normal_edges_symbols;
     console.log(automaton_NFA);
     console.log(automaton_DFA);
+
 })
 
 let button_change = () => {

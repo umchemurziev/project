@@ -9,10 +9,10 @@
 
 <body>
     <header class="header">
-        <div class="name_of_page">
+        <div class="header__name">
             <h1>HSE Project</h1>
         </div>
-        <div class="author">
+        <div class="header__author">
             <p>Umar Chemurziev</p>
         </div>
     </header>
@@ -22,7 +22,6 @@
             <button id="NFA" class="panel__btn panel__btn--active">НКА</button>
             <button id="DFA" class="panel__btn">ДКА</button>
         </section>
-        <div class="line1"></div>
 
         <section class="automaton">
             <sectoin class="automaton__pict">
@@ -30,10 +29,10 @@
                 <canvas id="viewport" width="800" height="400"></canvas>
             </sectoin>
 
-            <section class="automaton__code">
+            <section class="automaton__edges">
                 <h1>Ребра:</h1>
             </section>
-            <section class="automaton__code2">
+            <section class="automaton__nodes">
                 <h1>Какие состояния конечные?</h1>
             </section>
         </section>
@@ -42,17 +41,17 @@
             <button id="button-nfa-to-dfa">Перестроить в ДКА</button>
         </section>
 
-        <section class="draw_form">
+        <section class="draw-form">
             <form>
-                <div id="left_form" class="up_form">
+                <div id="left-form" class="up-form">
                     <input id="from" class="from" placeholder="откуда">
                     <input id="to" class="to" placeholder="куда">
                     <input id="symb" class="symb" placeholder="символ перехода">
-                    <button id="draw_form__add" class="draw_form__add" disabled>Добавить</button>
+                    <button id="draw-form__add" class="draw-form__add" type="button" disabled>Добавить</button>
                 </div>
-                <div id="right_form" class="bottom_form">
+                <div id="right-form" class="bottom-form">
                     <button id="delete" class="delete" type="button">Удалить</button>
-                    <button id="end_draw" class="end_draw">Построить</button>
+                    <button id="build-automaton" class="build-automaton">Построить</button>
                 </div>
             </form>
         </section>

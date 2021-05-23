@@ -6,6 +6,8 @@ let web_site = {
     automaton__nodes_names: $(".automaton__nodes--names"),
     automaton__edges: $(".automaton__edges"),
     automaton__nodes: $(".automaton__nodes"),
+    automaton_check_form: $(".check-form"),
+    automaton_check: $(".check"),
 
     times_add: 0,
     is_built: false,
@@ -26,7 +28,7 @@ let web_site = {
     button_add: $(".draw-form__add"),
     button_build : $(".build-automaton"),
 }
-
+let automaton_DFA;
 let automaton_NFA = {
     nodes_names: new Set(),
     data: {
@@ -108,7 +110,7 @@ let allEpsilon = (node) => {
 }
 
 let build_DFA = (automaton_NFA) => {
-    let automaton_DFA = {
+    automaton_DFA = {
         data: {
             nodes: [],
             edges: []
@@ -241,20 +243,18 @@ let build_DFA = (automaton_NFA) => {
         }
     }
     automaton_DFA.edges_symbols = automaton_DFA.normal_edges_symbols;
-    return automaton_DFA;
 }
 
 
 $(web_site.button_nfa_to_dfa).click(() => {
+    $(web_site.automaton_check).removeClass("invisible");
+    $(web_site.automaton_check_form).removeClass("invisible");
     $(web_site.automaton__pict).css({ 'width' : '40%' });
     $(web_site.automaton__pict2).css({ 'width' : '40%' });
     $(web_site.automaton__nodes_names).removeClass("invisible");
     $(web_site.button_build).prop('disabled', true);
     change_page(web_site.NFA, web_site.DFA);
-    automaton_DFA = build_DFA(automaton_NFA);
-    // automaton_NFA.data.edges += automaton_DFA.data.edges;
-    // automaton_NFA.data.nodes += automaton_DFA.data.nodes;
-    // automaton_NFA.edges_symbols += automaton_DFA.normal_edges_symbols;
+    build_DFA(automaton_NFA);
     console.log(automaton_NFA);
     console.log(automaton_DFA);
     createCanvas2(this.jQuery);
@@ -358,6 +358,8 @@ $(web_site.button_add).click(() => {
     $(web_site.symb).val("");
 })
 
+
+
 $(".build-automaton").click((evt) => { // Построить
     evt.preventDefault();
     $(web_site.button_nfa_to_dfa).prop('disabled', false);
@@ -403,6 +405,8 @@ function createCanvas($) {
                 if (rebuild) return;
 
                 $(".delete").click((evt) => {
+                    $(web_site.automaton_check).addClass("invisible");
+                    $(web_site.automaton_check_form).addClass("invisible");
                     $(web_site.automaton__pict).css({ 'width' : '49%' });
                     $(web_site.automaton__pict2).css({ 'width' : '49%' });
                     $(web_site.automaton__nodes_names).addClass("invisible");

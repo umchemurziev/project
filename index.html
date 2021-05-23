@@ -25,9 +25,11 @@
 
         <section class="automaton">
             <sectoin class="automaton__pict">
-                <!--                <img src="images/NFA.png" alt="NFA">-->
                 <canvas id="viewport" width="800" height="400"></canvas>
             </sectoin>
+            <section class="automaton__nodes--names invisible">
+                <h1>Вершины:</h1>
+            </section>
 
             <section class="automaton__edges">
                 <h1>Ребра:</h1>
@@ -35,10 +37,13 @@
             <section class="automaton__nodes">
                 <h1>Какие состояния конечные?</h1>
             </section>
+            <section class="automaton__pict2 invisible">
+                <canvas id="viewport2" width="800" height="400"></canvas>
+            </section>
         </section>
 
         <section class="button-nfa-to-dfa">
-            <button id="button-nfa-to-dfa">Перестроить в ДКА</button>
+            <button id="button-nfa-to-dfa" disabled>Перестроить в ДКА</button>
         </section>
 
         <section class="draw-form">
@@ -51,14 +56,15 @@
                 </div>
                 <div id="right-form" class="bottom-form">
                     <button id="delete" class="delete" type="button">Удалить</button>
-                    <button id="build-automaton" class="build-automaton">Построить</button>
+                    <button id="build-automaton" class="build-automaton" disabled>Построить</button>
                 </div>
             </form>
         </section>
         <section class="ps">
             <h3>Примечание</h3>
             <p>
-                Кнопка "Удалить" работает только после построения автомата. Не стоит создавать только одну вершину, ее будет трясти.
+                Кнопка "Удалить" работает только после построения автомата. Не стоит создавать только одну вершину, ее
+                будет трясти.
             </p>
         </section>
     </main>

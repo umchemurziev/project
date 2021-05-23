@@ -1,41 +1,48 @@
 // "use strict";
 
 let web_site = {
-    automaton__pict : $(".automaton__pict"),
-    is_NFA_page : true,
-    is_DFA_page : false,
-    NFA : $("#NFA"),
-    DFA : $("#DFA"),
+    automaton__pict: $(".automaton__pict"),
+    automaton__pict2: $(".automaton__pict2"),
+    automaton__nodes_names: $(".automaton__nodes--names"),
+    automaton__edges: $(".automaton__edges"),
+    automaton__nodes: $(".automaton__nodes"),
+
+    times_add: 0,
+    is_built: false,
+    is_NFA_page: true,
+    is_DFA_page: false,
+    NFA: $("#NFA"),
+    DFA: $("#DFA"),
 
     // Перестроить
-    button_nfa_to_dfa : $("#button-nfa-to-dfa"),
+    button_nfa_to_dfa: $("#button-nfa-to-dfa"),
 
     // Поля для ввода
-    from : $(".from"),
-    to : $(".to"),
-    symb : $(".symb"),
+    from: $(".from"),
+    to: $(".to"),
+    symb: $(".symb"),
 
     // Кнопка Добавить
-    button_add : $(".draw-form__add")
+    button_add: $(".draw-form__add"),
+    button_build : $(".build-automaton"),
 }
 
-let automaton_DFA;
 let automaton_NFA = {
-    nodes_names : new Set(),
-    data : {
+    nodes_names: new Set(),
+    data: {
         nodes: [],
         edges: []
     },
-    edges_symbols : [],
-    edges_symbols_DFA : [],
-    alphabet : new Set(),
+    edges_symbols: [],
+    edges_symbols_DFA: [],
+    alphabet: new Set(),
 
     // Финальные вершины
-    terms : [],
+    terms: [],
     // Добавленные ребра
-    edges_done : [],
+    edges_done: [],
     // Обратные ребра
-    rev_edges : [],
+    rev_edges: [],
 }
 
 let change_page = (page_from, page_to) => {
@@ -44,22 +51,31 @@ let change_page = (page_from, page_to) => {
     if (page_to === web_site.DFA) {
         web_site.is_DFA_page = true;
         web_site.is_NFA_page = false;
+
         $(web_site.button_nfa_to_dfa).addClass("invisible");
-        $(web_site.automaton__pict).html(`<img src="images/DFA.png" alt="DFA">`);
+        $(web_site.automaton__pict2).removeClass("invisible");
+        $(web_site.automaton__edges).addClass("invisible");
+        $(web_site.automaton__nodes).addClass("invisible");
+
+        // $(web_site.automaton__pict).html(`<img src="images/DFA.png" alt="DFA">`);
+
     } else {
         web_site.is_NFA_page = true;
         web_site.is_DFA_page = false;
         $(web_site.button_nfa_to_dfa).removeClass("invisible");
+        $(web_site.automaton__pict2).addClass("invisible");
+        $(web_site.automaton__edges).removeClass("invisible");
+        $(web_site.automaton__nodes).removeClass("invisible");
         $(web_site.automaton__pict).html(`<canvas id="viewport" width="800" height="400"></canvas>`);
     }
 }
 
 $(web_site.NFA).click(() => {
-    change_page(web_site.DFA, web_site.NFA);
+    // change_page(web_site.DFA, web_site.NFA);
 })
 
 $(web_site.DFA).click(() => {
-    change_page(web_site.NFA, web_site.DFA);
+    // change_page(web_site.NFA, web_site.DFA);
 })
 
 
@@ -93,26 +109,26 @@ let allEpsilon = (node) => {
 
 let build_DFA = (automaton_NFA) => {
     let automaton_DFA = {
-        data : {
-        nodes: [],
-        edges: []
+        data: {
+            nodes: [],
+            edges: []
         },
-        nodes_names : new Set(),
-        edges_symbols : [],
-        alphabet : new Set(),
+        nodes_names: new Set(),
+        edges_symbols: [],
+        alphabet: new Set(),
 
         // Финальные вершины
-        terms : [],
+        terms: [],
         // Добавленные ребра
-        edges_done : [],
+        edges_done: [],
         // Обратные ребра
-        rev_edges : [],
+        rev_edges: [],
 
-        names_ind : 0, // индекс для названия вершин
-        nodes_pair : new Map(), // название вершины - из каких состоит
-        nodes_pair2 : new Map(), // из каких состоит - название вершины
-        normal_edges_symbols : [], // как в NFA
-        first_names : [], // для первых назв верш
+        names_ind: 0, // индекс для названия вершин
+        nodes_pair: new Map(), // название вершины - из каких состоит
+        nodes_pair2: new Map(), // из каких состоит - название вершины
+        normal_edges_symbols: [], // как в NFA
+        first_names: [], // для первых назв верш
     }
     let s = allEpsilon(automaton_NFA.data.nodes[0].name);
     let P;
@@ -197,7 +213,7 @@ let build_DFA = (automaton_NFA) => {
             automaton_DFA.nodes_pair.set("q" + automaton_DFA.names_ind, nods[1]);
             automaton_DFA.nodes_names.add("q" + automaton_DFA.names_ind);
             automaton_DFA.nodes_pair2.set(nods[1], "q" + automaton_DFA.names_ind);
-            automaton_DFA.data.nodes.push({ name: "q" + automaton_DFA.names_ind} );
+            automaton_DFA.data.nodes.push({ name: "q" + automaton_DFA.names_ind });
         }
         automaton_DFA.alphabet = automaton_NFA.alphabet;
         let temp_edge = {
@@ -224,11 +240,16 @@ let build_DFA = (automaton_NFA) => {
             }
         }
     }
+    automaton_DFA.edges_symbols = automaton_DFA.normal_edges_symbols;
     return automaton_DFA;
 }
 
 
 $(web_site.button_nfa_to_dfa).click(() => {
+    $(web_site.automaton__pict).css({ 'width' : '40%' });
+    $(web_site.automaton__pict2).css({ 'width' : '40%' });
+    $(web_site.automaton__nodes_names).removeClass("invisible");
+    $(web_site.button_build).prop('disabled', true);
     change_page(web_site.NFA, web_site.DFA);
     automaton_DFA = build_DFA(automaton_NFA);
     // automaton_NFA.data.edges += automaton_DFA.data.edges;
@@ -236,7 +257,10 @@ $(web_site.button_nfa_to_dfa).click(() => {
     // automaton_NFA.edges_symbols += automaton_DFA.normal_edges_symbols;
     console.log(automaton_NFA);
     console.log(automaton_DFA);
-
+    createCanvas2(this.jQuery);
+    for (let node of automaton_DFA.nodes_names) {
+        $(web_site.automaton__nodes_names).append(`<h1>${node} = ${automaton_DFA.nodes_pair.get(node).split(":")}</h1>`);
+    }
 })
 
 let button_change = () => {
@@ -260,6 +284,7 @@ $(web_site.symb).change(() => {
 
 // "Кнопка добавить"
 $(web_site.button_add).click(() => {
+    $(web_site.button_build).prop('disabled', false); // Делаем кнопку "Построить" доступной
     $(web_site.button_add).prop('disabled', true); // Делаем кнопку "Добавить" недоступной
 
     if (!automaton_NFA.nodes_names.has($(web_site.from).val())) {
@@ -335,6 +360,8 @@ $(web_site.button_add).click(() => {
 
 $(".build-automaton").click((evt) => { // Построить
     evt.preventDefault();
+    $(web_site.button_nfa_to_dfa).prop('disabled', false);
+    web_site.is_built = true;
     createCanvas(this.jQuery);
 });
 
@@ -376,6 +403,14 @@ function createCanvas($) {
                 if (rebuild) return;
 
                 $(".delete").click((evt) => {
+                    $(web_site.automaton__pict).css({ 'width' : '49%' });
+                    $(web_site.automaton__pict2).css({ 'width' : '49%' });
+                    $(web_site.automaton__nodes_names).addClass("invisible");
+
+                    $(web_site.button_build).prop('disabled', true); // Делаем кнопку "Построить" недоступной
+                    $(web_site.button_nfa_to_dfa).prop('disabled', true);
+                    web_site.is_built = false;
+                    change_page(web_site.DFA, web_site.NFA);
                     evt.preventDefault();
                     automaton_NFA.data = {
                         nodes: [],
@@ -386,6 +421,7 @@ function createCanvas($) {
                     automaton_NFA.edges_done = [];
                     automaton_NFA.rev_edges = [];
                     $(".automaton__edges").html(`<h1>Ребра:</h1>`);
+                    $(web_site.automaton__nodes_names).html(`<h1>Вершины:</h1>`);
                     $(".automaton__nodes").html(`<h1>Какие состояния конечные?</h1>`);
                     ctx.fillStyle = "white"; //белым цветом
                     ctx.fillRect(0, 0, canvas.width, canvas.height); //закрашиваем всю область
@@ -451,7 +487,7 @@ function createCanvas($) {
                                 y: to.y - (to.y - from.y) * 0.058
                             }
 
-                            function draw_arrow () {
+                            function draw_arrow() {
                                 ctx.lineTo(arrow_end.x - headlen * Math.cos(angle - Math.PI / 6), arrow_end.y - headlen * Math.sin(angle - Math.PI / 6));
                                 ctx.moveTo(arrow_end.x, arrow_end.y);
                                 ctx.lineTo(arrow_end.x - headlen * Math.cos(angle + Math.PI / 6), arrow_end.y - headlen * Math.sin(angle + Math.PI / 6));
@@ -585,6 +621,265 @@ function createCanvas($) {
             });
 
             $.each(automaton_NFA.data.edges, function (i, edge) {
+                sys.addEdge(sys.getNode(edge.src), sys.getNode(edge.dest)); //добавляем грань
+            });
+        })();
+
+
+    })
+
+    if (rm || rebuild) {
+        return;
+    }
+}
+
+function createCanvas2($) {
+    let rebuild = false;
+    let rm = false;
+
+    var Renderer = function (canvas) {
+        var canvas = $(canvas).get(0);
+        var ctx = canvas.getContext("2d");
+        var particleSystem;
+
+        var that = {
+            init: function (system) {
+                //начальная инициализация
+                particleSystem = system;
+                particleSystem.screenSize(canvas.width, canvas.height);
+                particleSystem.screenPadding(80);
+                that.initMouseHandling();
+            },
+
+            redraw: function () {
+                let mas_cb = $(".checkbox");
+                for (let i = 0; i < mas_cb.length; i++) {
+                    $(mas_cb[i]).change(() => {
+                        if ($(mas_cb[i]).is(':checked') && !automaton_DFA.terms.includes($(mas_cb[i]).attr("name"))) {
+                            automaton_DFA.terms.push($(mas_cb[i]).attr("name"));
+                        } else if (!$(mas_cb[i]).is(':checked') && automaton_DFA.terms.includes($(mas_cb[i]).attr("name"))) {
+                            automaton_DFA.terms.splice(automaton_DFA.terms.indexOf($(mas_cb[i]).attr("name")), 1);
+                        }
+                    })
+                }
+
+                $(".build-automaton").click((evt) => {
+                    evt.preventDefault();
+                    rebuild = true;
+                });
+
+                if (rebuild) return;
+
+                $(".delete").click((evt) => {
+                    evt.preventDefault();
+                    automaton_DFA.data = {
+                        nodes: [],
+                        edges: []
+                    };
+                    automaton_DFA.edges_symbols = [];
+                    automaton_DFA.nodes_names.clear();
+                    automaton_DFA.edges_done = [];
+                    automaton_DFA.rev_edges = [];
+                    $(".automaton__edges").html(`<h1>Ребра:</h1>`);
+                    $(".automaton__nodes").html(`<h1>Какие состояния конечные?</h1>`);
+                    ctx.fillStyle = "white"; //белым цветом
+                    ctx.fillRect(0, 0, canvas.width, canvas.height); //закрашиваем всю область
+                    rm = true;
+                });
+
+                if (rm) return;
+
+                //действия при перересовке
+                ctx.fillStyle = "white"; //белым цветом
+                ctx.fillRect(0, 0, canvas.width, canvas.height); //закрашиваем всю область
+
+                particleSystem.eachEdge( //отрисуем каждую грань
+                    function (edge, pt1, pt2) { //будем работать с гранями и точками её начала и конца
+                        let temp = edge.source.name + ":" + edge.target.name;
+                        let rev_temp = edge.target.name + ":" + edge.source.name;
+                        if (!automaton_DFA.edges_done.includes(temp) && !automaton_DFA.edges_done.includes(rev_temp)) {
+                            automaton_DFA.edges_done.push(temp);
+                        }
+
+
+                        if (pt1.x === pt2.x && pt1.y === pt2.y) {
+                            canvas_loop(ctx, pt1);
+                        } else {
+                            canvas_arrow(ctx, pt1, pt2);
+                        }
+
+                        function canvas_loop(ctx, pt) {
+                            ctx.beginPath();
+                            ctx.arc(pt.x, pt.y - 15, 15, Math.PI / 1.4, 2.2 * Math.PI);
+                            var headlen = 20;   // length of head in pixels
+                            var angle = Math.atan2(0, 0);
+                            ctx.moveTo(pt.x + 12, pt.y - 6);
+                            ctx.lineTo(pt.x + 10, pt.y - 15)
+                            ctx.moveTo(pt.x + 12, pt.y - 6);
+                            ctx.lineTo(pt.x + 20, pt.y - 10);
+                            ctx.stroke();
+
+                            let symbols = "";
+                            for (let i = 0; i < automaton_DFA.edges_symbols.length; ++i) {
+                                if (edge.source.name === automaton_DFA.edges_symbols[i].split(":")[0] &&
+                                    edge.target.name === automaton_DFA.edges_symbols[i].split(":")[1]) {
+                                    symbols = automaton_DFA.edges_symbols[i].split(":")[2];
+                                }
+                            }
+                            ctx.fillStyle = "black"; //цвет для шрифта
+                            ctx.font = 'italic 16px sans-serif'; //шрифт
+                            ctx.fillText(symbols, pt.x - 15, pt.y - 33); //пишем имя у каждой точки
+                        }
+
+                        function canvas_arrow(ctx, from, to) {
+                            let symbols = "";
+                            for (let i = 0; i < automaton_DFA.edges_symbols.length; ++i) {
+                                if (edge.source.name === automaton_DFA.edges_symbols[i].split(":")[0] &&
+                                    edge.target.name === automaton_DFA.edges_symbols[i].split(":")[1]) {
+                                    symbols = automaton_DFA.edges_symbols[i].split(":")[2];
+                                }
+                            }
+                            var headlen = 20;   // length of head in pixels
+                            var angle = Math.atan2(to.y - from.y, to.x - from.x);
+                            var arrow_end = {
+                                x: to.x - (to.x - from.x) * 0.058,
+                                y: to.y - (to.y - from.y) * 0.058
+                            }
+
+                            function draw_arrow() {
+                                ctx.lineTo(arrow_end.x - headlen * Math.cos(angle - Math.PI / 6), arrow_end.y - headlen * Math.sin(angle - Math.PI / 6));
+                                ctx.moveTo(arrow_end.x, arrow_end.y);
+                                ctx.lineTo(arrow_end.x - headlen * Math.cos(angle + Math.PI / 6), arrow_end.y - headlen * Math.sin(angle + Math.PI / 6));
+                                ctx.stroke();
+                            }
+
+                            if (automaton_DFA.edges_done.includes(edge.target.name + ":" + edge.source.name)) {
+                                ctx.strokeStyle = "rgba(255,0,0, 0.7)"; //грани будут красный цветом с некой прозрачностью
+                                ctx.lineWidth = 1; //толщиной в один пиксель
+                                ctx.beginPath();  //начинаем рисовать
+                                ctx.moveTo(from.x, from.y);
+                                ctx.moveTo(arrow_end.x, arrow_end.y);
+                                draw_arrow();
+
+                                ctx.fillStyle = "red"; //цвет для шрифта
+                                ctx.font = 'italic 16px sans-serif'; //шрифт
+                                ctx.fillText(symbols, (from.x + to.x) / 2, (from.y + to.y) / 2 + 10); //пишем имя у каждой точки
+
+                                let rev_temp = edge.target.name + ":" + edge.source.name;
+                                automaton_DFA.rev_edges.push(rev_temp);
+
+                            } else if (automaton_DFA.rev_edges.includes(edge.source.name + ":" + edge.target.name)) {
+                                ctx.strokeStyle = "rgba(0,0,0, 0.7)"; //грани будут чёрным цветом с некой прозрачностью
+                                ctx.lineWidth = 1; //толщиной в один пиксель
+                                ctx.beginPath();  //начинаем рисовать
+                                ctx.moveTo(from.x, from.y);
+                                ctx.lineTo(arrow_end.x, arrow_end.y);
+                                ctx.stroke();
+                                ctx.strokeStyle = "rgba(0,255,0, 0.7)"; //грани будут зеленый цветом с некой прозрачностью
+                                ctx.beginPath();  //начинаем рисовать
+                                ctx.moveTo(arrow_end.x, arrow_end.y);
+                                draw_arrow();
+
+                                ctx.fillStyle = "green"; //цвет для шрифта
+                                ctx.font = 'italic 16px sans-serif'; //шрифт
+                                ctx.fillText(symbols, (from.x + to.x) / 2, (from.y + to.y) / 2 - 10); //пишем имя у каждой точки
+                            } else {
+                                ctx.strokeStyle = "rgba(0,0,0, 0.5)"; //грани будут черный цветом с некой прозрачностью
+                                ctx.lineWidth = 1; //толщиной в один пиксель
+                                ctx.beginPath();  //начинаем рисовать
+                                ctx.moveTo(from.x, from.y);
+                                ctx.lineTo(arrow_end.x, arrow_end.y);
+                                draw_arrow();
+
+                                ctx.fillStyle = "black"; //цвет для шрифта
+                                ctx.font = 'italic 16px sans-serif'; //шрифт
+                                ctx.fillText(symbols, (from.x + to.x) / 2, (from.y + to.y) / 2); //пишем имя у каждой точки
+                            }
+
+                            ctx.strokeStyle = "rgba(0,0,0, 0.5)"; //грани будут чёрным цветом с некой прозрачностью
+                            ctx.lineWidth = 1; //толщиной в один пиксель
+                        }
+                    });
+
+                particleSystem.eachNode( //теперь каждую вершину
+                    function (node, pt) {  //получаем вершину и точку где она
+
+                        var w = 10;   //ширина квадрата
+
+                        ctx.beginPath();
+                        ctx.arc(pt.x, pt.y, w, 0, 2 * Math.PI);
+                        if (automaton_DFA.terms.includes(node.name)) {
+                            ctx.fillStyle = "#00ff00";
+                        } else if (automaton_DFA.data.nodes[0].name === node.name) {
+                            ctx.fillStyle = "#ff0000";
+                        } else {
+                            ctx.fillStyle = "#109bfc";
+                        }
+                        ctx.fill();
+                        ctx.stroke();
+
+                        ctx.fillStyle = "black"; //цвет для шрифта
+                        ctx.font = 'italic 16px sans-serif'; //шрифт
+                        ctx.fillText(node.name, pt.x + 10, pt.y + 8); //пишем имя у каждой точки
+                    });
+
+            },
+
+            initMouseHandling: function () { //события с мышью
+                var dragged = null;   //вершина которую перемещают
+                var handler = {
+                    clicked: function (e) { //нажали
+                        var pos = $(canvas).offset(); //получаем позицию canvas
+                        _mouseP = arbor.Point(e.pageX - pos.left, e.pageY - pos.top); //и позицию нажатия кнопки относительно canvas
+                        dragged = particleSystem.nearest(_mouseP); //определяем ближайшую вершину к нажатию
+                        if (dragged && dragged.node !== null) {
+                            dragged.node.fixed = true; //фиксируем её
+                        }
+                        $(canvas).bind('mousemove', handler.dragged); //слушаем события перемещения мыши
+                        $(window).bind('mouseup', handler.dropped);  //и отпускания кнопки
+                        return false;
+                    },
+                    dragged: function (e) { //перетаскиваем вершину
+                        var pos = $(canvas).offset();
+                        var s = arbor.Point(e.pageX - pos.left, e.pageY - pos.top);
+
+                        if (dragged && dragged.node !== null) {
+                            var p = particleSystem.fromScreen(s);
+                            dragged.node.p = p; //тянем вершину за нажатой мышью
+                        }
+
+                        return false;
+                    },
+                    dropped: function (e) { //отпустили
+                        if (dragged === null || dragged.node === undefined) return; //если не перемещали, то уходим
+                        if (dragged.node !== null) dragged.node.fixed = false; //если перемещали - отпускаем
+                        dragged = null; //очищаем
+                        $(canvas).unbind('mousemove', handler.dragged); //перестаём слушать события
+                        $(window).unbind('mouseup', handler.dropped);
+                        _mouseP = null;
+                        return false;
+                    }
+                }
+                // слушаем события нажатия мыши
+                $(canvas).mousedown(handler.clicked);
+            },
+
+        }
+        return that;
+    }
+
+    $(document).ready(function () {
+
+        sys = arbor.ParticleSystem(1000, 600, 0.5, false, 120, 0.02, 0.6);
+
+        sys.renderer = Renderer("#viewport2"); //начинаем рисовать в выбраной области
+
+        (() => {
+            $.each(automaton_DFA.data.nodes, function (i, node) {
+                sys.addNode(node.name); //добавляем вершину
+            });
+
+            $.each(automaton_DFA.data.edges, function (i, edge) {
                 sys.addEdge(sys.getNode(edge.src), sys.getNode(edge.dest)); //добавляем грань
             });
         })();

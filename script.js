@@ -53,7 +53,10 @@ let change_page = (page_from, page_to) => {
     if (page_to === web_site.DFA) {
         web_site.is_DFA_page = true;
         web_site.is_NFA_page = false;
-
+        $(web_site.from).addClass("invisible");
+        $(web_site.to).addClass("invisible");
+        $(web_site.symb).addClass("invisible");
+        $(web_site.button_add).addClass("invisible");
         $(web_site.button_nfa_to_dfa).addClass("invisible");
         $(web_site.automaton__pict2).removeClass("invisible");
         $(web_site.automaton__edges).addClass("invisible");
@@ -64,6 +67,10 @@ let change_page = (page_from, page_to) => {
     } else {
         web_site.is_NFA_page = true;
         web_site.is_DFA_page = false;
+        $(web_site.from).removeClass("invisible");
+        $(web_site.to).removeClass("invisible");
+        $(web_site.symb).removeClass("invisible");
+        $(web_site.button_add).removeClass("invisible");
         $(web_site.button_nfa_to_dfa).removeClass("invisible");
         $(web_site.automaton__pict2).addClass("invisible");
         $(web_site.automaton__edges).removeClass("invisible");
@@ -72,13 +79,13 @@ let change_page = (page_from, page_to) => {
     }
 }
 
-$(web_site.NFA).click(() => {
-    // change_page(web_site.DFA, web_site.NFA);
-})
+// $(web_site.NFA).click(() => {
+//     change_page(web_site.DFA, web_site.NFA);
+// })
 
-$(web_site.DFA).click(() => {
-    // change_page(web_site.NFA, web_site.DFA);
-})
+// $(web_site.DFA).click(() => {
+//     change_page(web_site.NFA, web_site.DFA);
+// })
 
 
 // Cигма автомата
@@ -257,35 +264,51 @@ $(web_site.button_nfa_to_dfa).click(() => {
     build_DFA(automaton_NFA);
     console.log(automaton_NFA);
     console.log(automaton_DFA);
+
+    // var canvas = $(canvas).get(0);
+    // var ctx = canvas.getContext("2d");
+    // ctx.fillStyle = "white"; //белым цветом
+    // ctx.fillRect(0, 0, canvas.width, canvas.height); //закрашиваем всю область
+    // createCanvas(this.jQuery);
     createCanvas2(this.jQuery);
     for (let node of automaton_DFA.nodes_names) {
         $(web_site.automaton__nodes_names).append(`<h1>${node} = ${automaton_DFA.nodes_pair.get(node).split(":")}</h1>`);
     }
 })
 
-let button_change = () => {
-    if ($(web_site.from).val() && $(web_site.to).val() && $(web_site.symb).val()) {
-        $(web_site.button_add).prop('disabled', false);
-    } else {
-        $(web_site.button_add).prop('disabled', true);
-    }
-}
+// let button_change = () => {
+//     if ($(web_site.from).val() && $(web_site.to).val() && $(web_site.symb).val()) {
+//         $(web_site.button_add).prop('disabled', false);
+//     } else {
+//         $(web_site.button_add).prop('disabled', true);
+//     }
+// }
+
 
 // "Добавить" работает толоко если все ввести
-$(web_site.from).change(() => {
-    button_change();
-});
-$(web_site.to).change(() => {
-    button_change();
-});
-$(web_site.symb).change(() => {
-    button_change();
-});
+// $(web_site.from).change(() => {
+//     button_change();
+// });
+// $(web_site.to).change(() => {
+    // button_change();
+// });
+// $(web_site.symb).change(() => {
+    // button_change();
+// });
 
 // "Кнопка добавить"
 $(web_site.button_add).click(() => {
+    console.log($(web_site.from).val(),  $(web_site.to).val(),  $(web_site.symb).val());
+    console.log(!$(web_site.from).val(), !$(web_site.to).val(), !$(web_site.symb).val());
+    if (!$(web_site.from).val() || !$(web_site.to).val() || !$(web_site.symb).val()) {
+        alert("Заполните все поля!");
+        $(web_site.from).val("");
+        $(web_site.to).val("");
+        $(web_site.symb).val("");
+        return;
+    }
     $(web_site.button_build).prop('disabled', false); // Делаем кнопку "Построить" доступной
-    $(web_site.button_add).prop('disabled', true); // Делаем кнопку "Добавить" недоступной
+    // $(web_site.button_add).prop('disabled', true); // Делаем кнопку "Добавить" недоступной
 
     if (!automaton_NFA.nodes_names.has($(web_site.from).val())) {
         $(".automaton__nodes").append(
@@ -356,6 +379,10 @@ $(web_site.button_add).click(() => {
     $(web_site.from).val("");
     $(web_site.to).val("");
     $(web_site.symb).val("");
+
+    $(web_site.button_nfa_to_dfa).prop('disabled', false);
+    web_site.is_built = true;
+    createCanvas(this.jQuery);
 })
 
 
@@ -398,6 +425,11 @@ function createCanvas($) {
                 }
 
                 $(".build-automaton").click((evt) => {
+                    evt.preventDefault();
+                    rebuild = true;
+                });
+
+                $(".draw-form__add").click((evt) => {
                     evt.preventDefault();
                     rebuild = true;
                 });

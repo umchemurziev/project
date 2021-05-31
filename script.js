@@ -27,6 +27,13 @@ let web_site = {
     // Кнопка Добавить
     button_add: $(".draw-form__add"),
     button_build : $(".build-automaton"),
+
+    which_temp : 0,
+    button_template1 : $("#template1"),
+    button_template2 : $("#template2"),
+    button_template3 : $("#template3"),
+    button_template4 : $("#template4"),
+    nrf : 0,
 }
 let automaton_DFA;
 let automaton_NFA = {
@@ -47,10 +54,125 @@ let automaton_NFA = {
     rev_edges: [],
 }
 
+let template1 = {
+    alphabet : new Set(["1", "0"]),
+    data : {
+        nodes : [ { name: "S" }, { name: "q1" }, { name: "q2" }, { name: "q4" }, { name: "q3" } ],
+        edges : [ { src: "S", dest: "q1" }, { src: "S", dest: "q2" }, { src: "q2", dest: "q4" }, { src: "q4", dest: "q3" }, { src: "q1", dest: "q3" }, { src: "S", dest: "q3" }, { src: "q3", dest: "S" } ],
+    },
+    edges_done : ["S:q1", "S:q2", "q2:q4", "q4:q3", "q1:q3", "S:q3"],
+    edges_symbols : ["S:q1:1", "S:q2:0", "q2:q4:0", "q4:q3:∑", "q1:q3:∑", "S:q3:∑", "q3:S:∑"],
+    nodes_names : new Set(["S", "q1", "q2", "q4", "q3"]),
+    rev_edges : ["S:q3"],
+    terms : ["q3"],
+}
+let rebuild_template1 = () => {
+    template1 = {
+        alphabet : new Set(["1", "0"]),
+        data : {
+            nodes : [ { name: "S" }, { name: "q1" }, { name: "q2" }, { name: "q4" }, { name: "q3" } ],
+            edges : [ { src: "S", dest: "q1" }, { src: "S", dest: "q2" }, { src: "q2", dest: "q4" }, { src: "q4", dest: "q3" }, { src: "q1", dest: "q3" }, { src: "S", dest: "q3" }, { src: "q3", dest: "S" } ],
+        },
+        edges_done : ["S:q1", "S:q2", "q2:q4", "q4:q3", "q1:q3", "S:q3"],
+        edges_symbols : ["S:q1:1", "S:q2:0", "q2:q4:0", "q4:q3:∑", "q1:q3:∑", "S:q3:∑", "q3:S:∑"],
+        nodes_names : new Set(["S", "q1", "q2", "q4", "q3"]),
+        rev_edges : ["S:q3"],
+        terms : ["q3"],
+    }
+}
+
+let template2 = {
+    alphabet : new Set(["1", "0"]),
+    data : {
+        nodes : [ { name: "S" }, { name: "q1" }, { name: "q2" }, { name: "q4" }, { name: "q3" } ],
+        edges : [ { src: "S", dest: "q1" }, { src: "S", dest: "q2" }, { src: "q2", dest: "q4" }, { src: "q4", dest: "q3" }, { src: "q1", dest: "q3" }, { src: "S", dest: "q3" }, { src: "q3", dest: "S" } ],
+    },
+    edges_done : ["S:q1", "S:q2", "q2:q4", "q4:q3", "q1:q3", "S:q3"],
+    edges_symbols : ["S:q1:1", "S:q2:0", "q2:q4:0", "q4:q3:∑", "q1:q3:∑", "S:q3:∑", "q3:S:∑"],
+    nodes_names : new Set(["S", "q1", "q2", "q4", "q3"]),
+    rev_edges : ["S:q3"],
+    terms : ["q3"],
+}
+let rebuild_template2 = () => {
+    template2 = {
+        alphabet : new Set(["1", "0"]),
+        data : {
+            nodes : [ { name: "S" }, { name: "q1" }, { name: "q2" }, { name: "q4" }, { name: "q3" } ],
+            edges : [ { src: "S", dest: "q1" }, { src: "S", dest: "q2" }, { src: "q2", dest: "q4" }, { src: "q4", dest: "q3" }, { src: "q1", dest: "q3" }, { src: "S", dest: "q3" }, { src: "q3", dest: "S" } ],
+        },
+        edges_done : ["S:q1", "S:q2", "q2:q4", "q4:q3", "q1:q3", "S:q3"],
+        edges_symbols : ["S:q1:1", "S:q2:0", "q2:q4:0", "q4:q3:∑", "q1:q3:∑", "S:q3:∑", "q3:S:∑"],
+        nodes_names : new Set(["S", "q1", "q2", "q4", "q3"]),
+        rev_edges : ["S:q3"],
+        terms : ["q3"],
+    }
+}
+
+let template3 = {
+    alphabet : new Set(["1", "0"]),
+    data : {
+        nodes : [ { name: "S" }, { name: "q1" }, { name: "q2" }, { name: "q4" }, { name: "q3" } ],
+        edges : [ { src: "S", dest: "q1" }, { src: "S", dest: "q2" }, { src: "q2", dest: "q4" }, { src: "q4", dest: "q3" }, { src: "q1", dest: "q3" }, { src: "S", dest: "q3" }, { src: "q3", dest: "S" } ],
+    },
+    edges_done : ["S:q1", "S:q2", "q2:q4", "q4:q3", "q1:q3", "S:q3"],
+    edges_symbols : ["S:q1:1", "S:q2:0", "q2:q4:0", "q4:q3:∑", "q1:q3:∑", "S:q3:∑", "q3:S:∑"],
+    nodes_names : new Set(["S", "q1", "q2", "q4", "q3"]),
+    rev_edges : ["S:q3"],
+    terms : ["q3"],
+}
+let rebuild_template3 = () => {
+    template3 = {
+        alphabet : new Set(["1", "0"]),
+        data : {
+            nodes : [ { name: "S" }, { name: "q1" }, { name: "q2" }, { name: "q4" }, { name: "q3" } ],
+            edges : [ { src: "S", dest: "q1" }, { src: "S", dest: "q2" }, { src: "q2", dest: "q4" }, { src: "q4", dest: "q3" }, { src: "q1", dest: "q3" }, { src: "S", dest: "q3" }, { src: "q3", dest: "S" } ],
+        },
+        edges_done : ["S:q1", "S:q2", "q2:q4", "q4:q3", "q1:q3", "S:q3"],
+        edges_symbols : ["S:q1:1", "S:q2:0", "q2:q4:0", "q4:q3:∑", "q1:q3:∑", "S:q3:∑", "q3:S:∑"],
+        nodes_names : new Set(["S", "q1", "q2", "q4", "q3"]),
+        rev_edges : ["S:q3"],
+        terms : ["q3"],
+    }
+}
+
+let template4 = {
+    alphabet : new Set(["1", "0"]),
+    data : {
+        nodes : [ { name: "S" }, { name: "q1" }, { name: "q2" }, { name: "q4" }, { name: "q3" } ],
+        edges : [ { src: "S", dest: "q1" }, { src: "S", dest: "q2" }, { src: "q2", dest: "q4" }, { src: "q4", dest: "q3" }, { src: "q1", dest: "q3" }, { src: "S", dest: "q3" }, { src: "q3", dest: "S" } ],
+    },
+    edges_done : ["S:q1", "S:q2", "q2:q4", "q4:q3", "q1:q3", "S:q3"],
+    edges_symbols : ["S:q1:1", "S:q2:0", "q2:q4:0", "q4:q3:∑", "q1:q3:∑", "S:q3:∑", "q3:S:∑"],
+    nodes_names : new Set(["S", "q1", "q2", "q4", "q3"]),
+    rev_edges : ["S:q3"],
+    terms : ["q3"],
+}
+let rebuild_template4 = () => {
+    template4 = {
+        alphabet : new Set(["1", "0"]),
+        data : {
+            nodes : [ { name: "S" }, { name: "q1" }, { name: "q2" }, { name: "q4" }, { name: "q3" } ],
+            edges : [ { src: "S", dest: "q1" }, { src: "S", dest: "q2" }, { src: "q2", dest: "q4" }, { src: "q4", dest: "q3" }, { src: "q1", dest: "q3" }, { src: "S", dest: "q3" }, { src: "q3", dest: "S" } ],
+        },
+        edges_done : ["S:q1", "S:q2", "q2:q4", "q4:q3", "q1:q3", "S:q3"],
+        edges_symbols : ["S:q1:1", "S:q2:0", "q2:q4:0", "q4:q3:∑", "q1:q3:∑", "S:q3:∑", "q3:S:∑"],
+        nodes_names : new Set(["S", "q1", "q2", "q4", "q3"]),
+        rev_edges : ["S:q3"],
+        terms : ["q3"],
+    }
+}
+
 let change_page = (page_from, page_to) => {
     $(page_from).removeClass("panel__btn--active");
     $(page_to).addClass("panel__btn--active");
     if (page_to === web_site.DFA) {
+        $(web_site.automaton_check).removeClass("invisible");
+        $(web_site.automaton_check_form).removeClass("invisible");
+        $(web_site.automaton__pict).css({ 'width' : '40%' });
+        $(web_site.automaton__pict2).css({ 'width' : '40%' });
+        $(web_site.automaton__nodes_names).removeClass("invisible");
+        $(web_site.button_build).prop('disabled', true);
+
         web_site.is_DFA_page = true;
         web_site.is_NFA_page = false;
         $(web_site.from).addClass("invisible");
@@ -65,6 +187,15 @@ let change_page = (page_from, page_to) => {
         // $(web_site.automaton__pict).html(`<img src="images/DFA.png" alt="DFA">`);
 
     } else {
+        $(web_site.automaton_check).addClass("invisible");
+        $(web_site.automaton_check_form).addClass("invisible");
+        $(web_site.automaton__pict).css({ 'width' : '49%' });
+        $(web_site.automaton__pict2).css({ 'width' : '49%' });
+        $(web_site.automaton__nodes_names).addClass("invisible");
+
+        $(web_site.button_build).prop('disabled', true); // Делаем кнопку "Построить" недоступной
+        $(web_site.button_nfa_to_dfa).prop('disabled', true);
+
         web_site.is_NFA_page = true;
         web_site.is_DFA_page = false;
         $(web_site.from).removeClass("invisible");
@@ -116,7 +247,7 @@ let allEpsilon = (node) => {
     return visited;
 }
 
-let build_DFA = (automaton_NFA) => {
+let build_DFA = (automaton) => {
     automaton_DFA = {
         data: {
             nodes: [],
@@ -139,7 +270,7 @@ let build_DFA = (automaton_NFA) => {
         normal_edges_symbols: [], // как в NFA
         first_names: [], // для первых назв верш
     }
-    let s = allEpsilon(automaton_NFA.data.nodes[0].name);
+    let s = allEpsilon(automaton.data.nodes[0].name);
     let P;
     P = [];
     // console.log("s = ", s);
@@ -148,7 +279,7 @@ let build_DFA = (automaton_NFA) => {
     while (P.length) {
         let p_d = P[0];
         P.shift();
-        for (let c of automaton_NFA.alphabet) {
+        for (let c of automaton.alphabet) {
             let q_d = new Set();
             for (let p of p_d) {
                 let tt = sigma(p, c);
@@ -186,7 +317,8 @@ let build_DFA = (automaton_NFA) => {
             if (q_d.size) {
                 let flag = true;
                 for (let i = 0; i < automaton_DFA.edges_symbols.length; ++i) {
-                    if (automaton_DFA.edges_symbols[i][0] === p_d_str && automaton_DFA.edges_symbols[i][1] === q_d_str) {
+                    let prev_chars = automaton_DFA.edges_symbols[i][2].split(", ");
+                    if (automaton_DFA.edges_symbols[i][0] === p_d_str && automaton_DFA.edges_symbols[i][1] === q_d_str && !prev_chars.includes(c)) {
                         automaton_DFA.edges_symbols[i][2] += ", " + c;
                         flag = false;
                     }
@@ -204,27 +336,27 @@ let build_DFA = (automaton_NFA) => {
         if (!automaton_DFA.first_names.includes(nods[0])) {
             automaton_DFA.first_names.push(nods[0]);
             if (automaton_DFA.names_ind) {
-                automaton_DFA.nodes_pair.set("q" + automaton_DFA.names_ind, nods[0]);
-                automaton_DFA.nodes_names.add("q" + automaton_DFA.names_ind);
-                automaton_DFA.nodes_pair2.set(nods[0], "q" + automaton_DFA.names_ind);
-                automaton_DFA.data.nodes.push({ name: "q" + automaton_DFA.names_ind });
+                automaton_DFA.nodes_pair.set("p" + automaton_DFA.names_ind, nods[0]);
+                automaton_DFA.nodes_names.add("p" + automaton_DFA.names_ind);
+                automaton_DFA.nodes_pair2.set(nods[0], "p" + automaton_DFA.names_ind);
+                automaton_DFA.data.nodes.push({ name: "p" + automaton_DFA.names_ind });
                 automaton_DFA.names_ind += 1;
             } else {
-                automaton_DFA.nodes_pair.set("S", nods[0]);
-                automaton_DFA.nodes_names.add("S");
-                automaton_DFA.nodes_pair2.set(nods[0], "S");
-                automaton_DFA.data.nodes.push({ name: "S" });
+                automaton_DFA.nodes_pair.set("S`", nods[0]);
+                automaton_DFA.nodes_names.add("S`");
+                automaton_DFA.nodes_pair2.set(nods[0], "S`");
+                automaton_DFA.data.nodes.push({ name: "S`" });
             }
         }
         if (!automaton_DFA.first_names.includes(nods[1])) {
             automaton_DFA.first_names.push(nods[1]);
             automaton_DFA.names_ind += 1;
-            automaton_DFA.nodes_pair.set("q" + automaton_DFA.names_ind, nods[1]);
-            automaton_DFA.nodes_names.add("q" + automaton_DFA.names_ind);
-            automaton_DFA.nodes_pair2.set(nods[1], "q" + automaton_DFA.names_ind);
-            automaton_DFA.data.nodes.push({ name: "q" + automaton_DFA.names_ind });
+            automaton_DFA.nodes_pair.set("p" + automaton_DFA.names_ind, nods[1]);
+            automaton_DFA.nodes_names.add("p" + automaton_DFA.names_ind);
+            automaton_DFA.nodes_pair2.set(nods[1], "p" + automaton_DFA.names_ind);
+            automaton_DFA.data.nodes.push({ name: "p" + automaton_DFA.names_ind });
         }
-        automaton_DFA.alphabet = automaton_NFA.alphabet;
+        automaton_DFA.alphabet = automaton.alphabet;
         let temp_edge = {
             src: automaton_DFA.nodes_pair2.get(nods[0]),
             dest: automaton_DFA.nodes_pair2.get(nods[1]),
@@ -243,7 +375,7 @@ let build_DFA = (automaton_NFA) => {
         let nod2 = automaton_DFA.nodes_pair.get(nod).split(":");
         if (nod2) {
             for (let nod3 of nod2) {
-                if (automaton_NFA.terms.includes(nod3)) {
+                if (automaton.terms.includes(nod3)) {
                     automaton_DFA.terms.push(nod);
                 }
             }
@@ -254,16 +386,10 @@ let build_DFA = (automaton_NFA) => {
 
 
 $(web_site.button_nfa_to_dfa).click(() => {
-    $(web_site.automaton_check).removeClass("invisible");
-    $(web_site.automaton_check_form).removeClass("invisible");
-    $(web_site.automaton__pict).css({ 'width' : '40%' });
-    $(web_site.automaton__pict2).css({ 'width' : '40%' });
-    $(web_site.automaton__nodes_names).removeClass("invisible");
-    $(web_site.button_build).prop('disabled', true);
     change_page(web_site.NFA, web_site.DFA);
     build_DFA(automaton_NFA);
-    console.log(automaton_NFA);
-    console.log(automaton_DFA);
+    // console.log(automaton_NFA);
+    // console.log(automaton_DFA);
 
     // var canvas = $(canvas).get(0);
     // var ctx = canvas.getContext("2d");
@@ -271,7 +397,8 @@ $(web_site.button_nfa_to_dfa).click(() => {
     // ctx.fillRect(0, 0, canvas.width, canvas.height); //закрашиваем всю область
     // createCanvas(this.jQuery);
     createCanvas2(this.jQuery);
-    for (let node of automaton_DFA.nodes_names) {
+
+    for (let node of automaton_DFA.nodes_names) { // Печатаем новые вершины
         $(web_site.automaton__nodes_names).append(`<h1>${node} = ${automaton_DFA.nodes_pair.get(node).split(":")}</h1>`);
     }
 })
@@ -298,9 +425,9 @@ $(web_site.button_nfa_to_dfa).click(() => {
 
 // "Кнопка добавить"
 $(web_site.button_add).click(() => {
-    console.log($(web_site.from).val(),  $(web_site.to).val(),  $(web_site.symb).val());
-    console.log(!$(web_site.from).val(), !$(web_site.to).val(), !$(web_site.symb).val());
-    if (!$(web_site.from).val() || !$(web_site.to).val() || !$(web_site.symb).val()) {
+    // console.log($(web_site.from).val(),  $(web_site.to).val(),  $(web_site.symb).val());
+    // console.log(!$(web_site.from).val(), !$(web_site.to).val(), !$(web_site.symb).val());
+    if (!$(web_site.from).val() || !$(web_site.to).val() || !$(web_site.symb).val()) { // Ошибка ввода ребер
         alert("Заполните все поля!");
         $(web_site.from).val("");
         $(web_site.to).val("");
@@ -327,15 +454,19 @@ $(web_site.button_add).click(() => {
     if ($(web_site.symb).val() !== "∑") automaton_NFA.alphabet.add($(web_site.symb).val());
 
     // Добавляем новые символы перехода
-    let flag = true;
+    let need_new_edge = true;
     for (let i = 0; i < automaton_NFA.edges_symbols.length; i++) {
+        let prev_s = automaton_NFA.edges_symbols[i].split(":");
+        prev_s = prev_s[2].split(", ");
+        let c = $(web_site.symb).val();
         if (automaton_NFA.edges_symbols[i].split(":")[0] === $(web_site.from).val() && automaton_NFA.edges_symbols[i].split(":")[1] === $(web_site.to).val()) {
-            automaton_NFA.edges_symbols[i] += ", " + $(web_site.symb).val();
-            flag = false;
+            console.log(prev_s, !prev_s.includes(c));
+            if (!prev_s.includes(c)) automaton_NFA.edges_symbols[i] += ", " + c;
+            need_new_edge = false;
         }
     }
 
-    if (flag) {
+    if (need_new_edge) {
         let edge = "";
         edge += $(web_site.from).val() + ":" + $(web_site.to).val() + ":" + $(web_site.symb).val();
         automaton_NFA.edges_symbols.push(edge);
@@ -345,7 +476,7 @@ $(web_site.button_add).click(() => {
     $(".automaton__edges").append(`<h1>Из ${$(web_site.from).val()} в ${$(web_site.to).val()} по символу: ${$(web_site.symb).val()}</h1>`); // Печатаем ребро
 
 
-    // NODES1 Добавлеение вершины from
+    // NODES1 Добавление вершины from
     let f = true;
     for (let i = 0; i < automaton_NFA.data.nodes.length; i++) {
         if ($(web_site.from).val() === automaton_NFA.data.nodes[i].name) {
@@ -387,12 +518,128 @@ $(web_site.button_add).click(() => {
 
 
 
-$(".build-automaton").click((evt) => { // Построить
-    evt.preventDefault();
-    $(web_site.button_nfa_to_dfa).prop('disabled', false);
-    web_site.is_built = true;
+// $(".build-automaton").click((evt) => { // Построить
+//     evt.preventDefault();
+//     $(web_site.button_nfa_to_dfa).prop('disabled', false);
+//     web_site.is_built = true;
+//     createCanvas(this.jQuery);
+// });
+
+let change_temp = (n) => {
+    if (n) $("#delete").click();
+    // web_site.nrf = 1;
+    // $(".delete").click();
+
+    // var canvas = $(canvas).get(0);
+    // var ctx = canvas.getContext("2d");
+    // ctx.fillStyle = "white"; //белым цветом
+    // ctx.fillRect(0, 0, canvas.width, canvas.height); //закрашиваем всю область
+
+    if (web_site.which_temp === 1) {
+        $(web_site.button_template1).removeClass("panel__btn--active");
+    } else if (web_site.which_temp === 2) {
+        $(web_site.button_template2).removeClass("panel__btn--active");
+    } else if (web_site.which_temp === 3) {
+        $(web_site.button_template3).removeClass("panel__btn--active");
+    } else if (web_site.which_temp === 4) {
+        $(web_site.button_template4).removeClass("panel__btn--active");
+    }
+
+    if (n === 1) {
+        $(web_site.button_template1).addClass("panel__btn--active");
+    } else if (n === 2) {
+        $(web_site.button_template2).addClass("panel__btn--active");
+    } else if (n === 3) {
+        $(web_site.button_template3).addClass("panel__btn--active");
+    } else if (n === 4) {
+        $(web_site.button_template4).addClass("panel__btn--active");
+    }
+    web_site.which_temp = n;
+    $(web_site.automaton__nodes_names).html(`<h1>Вершины:</h1>`);
+}
+
+$(web_site.button_template1).click((evt) => {
+    console.log(web_site.which_temp, 1);
+    if (web_site.which_temp === 1) return;
+
+
+    change_temp(1);
+    automaton_NFA = template1;
+    change_page(web_site.NFA, web_site.DFA);
+    build_DFA(template1);
+    // console.log(automaton_NFA);
+    // console.log(automaton_DFA);
+
+    // var canvas = $(canvas).get(0);
+    // var ctx = canvas.getContext("2d");
+    // ctx.fillStyle = "white"; //белым цветом
+    // ctx.fillRect(0, 0, canvas.width, canvas.height); //закрашиваем всю область
     createCanvas(this.jQuery);
-});
+    createCanvas2(this.jQuery);
+    for (let node of automaton_DFA.nodes_names) {
+        $(web_site.automaton__nodes_names).append(`<h1>${node} = ${automaton_DFA.nodes_pair.get(node).split(":")}</h1>`);
+    }
+})
+$(web_site.button_template2).click((evt) => {
+    console.log(web_site.which_temp, 2);
+    if (web_site.which_temp === 2) return;
+    change_temp(2);
+    automaton_NFA = template2;
+    change_page(web_site.NFA, web_site.DFA);
+    build_DFA(template2);
+    // console.log(automaton_NFA);
+    // console.log(automaton_DFA);
+
+    // var canvas = $(canvas).get(0);
+    // var ctx = canvas.getContext("2d");
+    // ctx.fillStyle = "white"; //белым цветом
+    // ctx.fillRect(0, 0, canvas.width, canvas.height); //закрашиваем всю область
+    createCanvas(this.jQuery);
+    createCanvas2(this.jQuery);
+    for (let node of automaton_DFA.nodes_names) {
+        $(web_site.automaton__nodes_names).append(`<h1>${node} = ${automaton_DFA.nodes_pair.get(node).split(":")}</h1>`);
+    }
+})
+$(web_site.button_template3).click((evt) => {
+    console.log(web_site.which_temp, 3);
+    if (web_site.which_temp === 3) return;
+    change_temp(3);
+    automaton_NFA = template3;
+    change_page(web_site.NFA, web_site.DFA);
+    build_DFA(template3);
+    // console.log(automaton_NFA);
+    // console.log(automaton_DFA);
+
+    // var canvas = $(canvas).get(0);
+    // var ctx = canvas.getContext("2d");
+    // ctx.fillStyle = "white"; //белым цветом
+    // ctx.fillRect(0, 0, canvas.width, canvas.height); //закрашиваем всю область
+    createCanvas(this.jQuery);
+    createCanvas2(this.jQuery);
+    for (let node of automaton_DFA.nodes_names) {
+        $(web_site.automaton__nodes_names).append(`<h1>${node} = ${automaton_DFA.nodes_pair.get(node).split(":")}</h1>`);
+    }
+})
+$(web_site.button_template4).click((evt) => {
+    console.log(web_site.which_temp, 4);
+    if (web_site.which_temp === 4) return;
+    change_temp(4);
+    automaton_NFA = template4;
+    change_page(web_site.NFA, web_site.DFA);
+    build_DFA(template4);
+    // console.log(automaton_NFA);
+    // console.log(automaton_DFA);
+
+    // var canvas = $(canvas).get(0);
+    // var ctx = canvas.getContext("2d");
+    // ctx.fillStyle = "white"; //белым цветом
+    // ctx.fillRect(0, 0, canvas.width, canvas.height); //закрашиваем всю область
+    createCanvas(this.jQuery);
+    createCanvas2(this.jQuery);
+    for (let node of automaton_DFA.nodes_names) {
+        $(web_site.automaton__nodes_names).append(`<h1>${node} = ${automaton_DFA.nodes_pair.get(node).split(":")}</h1>`);
+    }
+})
 
 function createCanvas($) {
     let rebuild = false;
@@ -437,14 +684,9 @@ function createCanvas($) {
                 if (rebuild) return;
 
                 $(".delete").click((evt) => {
-                    $(web_site.automaton_check).addClass("invisible");
-                    $(web_site.automaton_check_form).addClass("invisible");
-                    $(web_site.automaton__pict).css({ 'width' : '49%' });
-                    $(web_site.automaton__pict2).css({ 'width' : '49%' });
-                    $(web_site.automaton__nodes_names).addClass("invisible");
-
-                    $(web_site.button_build).prop('disabled', true); // Делаем кнопку "Построить" недоступной
-                    $(web_site.button_nfa_to_dfa).prop('disabled', true);
+                    // location.reload();
+                    // return;
+                    console.log("log1");
                     web_site.is_built = false;
                     change_page(web_site.DFA, web_site.NFA);
                     evt.preventDefault();
@@ -456,15 +698,31 @@ function createCanvas($) {
                     automaton_NFA.nodes_names.clear();
                     automaton_NFA.edges_done = [];
                     automaton_NFA.rev_edges = [];
+                    automaton_NFA.alphabet.clear();
                     $(".automaton__edges").html(`<h1>Ребра:</h1>`);
                     $(web_site.automaton__nodes_names).html(`<h1>Вершины:</h1>`);
                     $(".automaton__nodes").html(`<h1>Какие состояния конечные?</h1>`);
                     ctx.fillStyle = "white"; //белым цветом
                     ctx.fillRect(0, 0, canvas.width, canvas.height); //закрашиваем всю область
                     rm = true;
+                    rebuild_template1();
+                    rebuild_template2();
+                    rebuild_template3();
+                    rebuild_template4();
+                    change_temp(0);
                 });
 
                 if (rm) return;
+
+                // if (web_site.nrf) {
+                //     ctx.fillStyle = "white"; //белым цветом
+                //     ctx.fillRect(0, 0, canvas.width, canvas.height); //закрашиваем всю область
+                //     rebuild_template1();
+                //     rebuild_template2();
+                //     rebuild_template3();
+                //     rebuild_template4();
+                // }
+                // web_site.nrf = 0;
 
                 //действия при перересовке
                 ctx.fillStyle = "white"; //белым цветом
@@ -543,7 +801,8 @@ function createCanvas($) {
                                 ctx.fillText(symbols, (from.x + to.x) / 2, (from.y + to.y) / 2 + 10); //пишем имя у каждой точки
 
                                 let rev_temp = edge.target.name + ":" + edge.source.name;
-                                automaton_NFA.rev_edges.push(rev_temp);
+                                if (!automaton_NFA.rev_edges.includes(rev_temp))
+                                    automaton_NFA.rev_edges.push(rev_temp);
 
                             } else if (automaton_NFA.rev_edges.includes(edge.source.name + ":" + edge.target.name)) {
                                 ctx.strokeStyle = "rgba(0,0,0, 0.7)"; //грани будут чёрным цветом с некой прозрачностью
@@ -673,7 +932,7 @@ function createCanvas2($) {
     let rebuild = false;
     let rm = false;
 
-    var Renderer = function (canvas) {
+    var Renderer2 = function (canvas) {
         var canvas = $(canvas).get(0);
         var ctx = canvas.getContext("2d");
         var particleSystem;
@@ -684,7 +943,7 @@ function createCanvas2($) {
                 particleSystem = system;
                 particleSystem.screenSize(canvas.width, canvas.height);
                 particleSystem.screenPadding(80);
-                that.initMouseHandling();
+                that.initMouseHandling2();
             },
 
             redraw: function () {
@@ -699,14 +958,10 @@ function createCanvas2($) {
                     })
                 }
 
-                $(".build-automaton").click((evt) => {
-                    evt.preventDefault();
-                    rebuild = true;
-                });
-
                 if (rebuild) return;
 
                 $(".delete").click((evt) => {
+                    console.log("log2");
                     evt.preventDefault();
                     automaton_DFA.data = {
                         nodes: [],
@@ -716,16 +971,22 @@ function createCanvas2($) {
                     automaton_DFA.nodes_names.clear();
                     automaton_DFA.edges_done = [];
                     automaton_DFA.rev_edges = [];
+                    automaton_DFA.alphabet.clear();
                     $(".automaton__edges").html(`<h1>Ребра:</h1>`);
                     $(".automaton__nodes").html(`<h1>Какие состояния конечные?</h1>`);
                     ctx.fillStyle = "white"; //белым цветом
                     ctx.fillRect(0, 0, canvas.width, canvas.height); //закрашиваем всю область
                     rm = true;
+                    rebuild_template1();
+                    rebuild_template2();
+                    rebuild_template3();
+                    rebuild_template4();
+                    change_temp(0);
                 });
 
                 if (rm) return;
 
-                //действия при перересовке
+                //действия при перерисовке
                 ctx.fillStyle = "white"; //белым цветом
                 ctx.fillRect(0, 0, canvas.width, canvas.height); //закрашиваем всю область
 
@@ -802,7 +1063,8 @@ function createCanvas2($) {
                                 ctx.fillText(symbols, (from.x + to.x) / 2, (from.y + to.y) / 2 + 10); //пишем имя у каждой точки
 
                                 let rev_temp = edge.target.name + ":" + edge.source.name;
-                                automaton_DFA.rev_edges.push(rev_temp);
+                                if (!automaton_DFA.rev_edges.includes(rev_temp))
+                                    automaton_DFA.rev_edges.push(rev_temp);
 
                             } else if (automaton_DFA.rev_edges.includes(edge.source.name + ":" + edge.target.name)) {
                                 ctx.strokeStyle = "rgba(0,0,0, 0.7)"; //грани будут чёрным цветом с некой прозрачностью
@@ -861,7 +1123,7 @@ function createCanvas2($) {
 
             },
 
-            initMouseHandling: function () { //события с мышью
+            initMouseHandling2: function () { //события с мышью
                 var dragged = null;   //вершина которую перемещают
                 var handler = {
                     clicked: function (e) { //нажали
@@ -908,7 +1170,7 @@ function createCanvas2($) {
 
         sys = arbor.ParticleSystem(1000, 600, 0.5, false, 120, 0.02, 0.6);
 
-        sys.renderer = Renderer("#viewport2"); //начинаем рисовать в выбраной области
+        sys.renderer = Renderer2("#viewport2"); //начинаем рисовать в выбраной области
 
         (() => {
             $.each(automaton_DFA.data.nodes, function (i, node) {

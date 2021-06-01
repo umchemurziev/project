@@ -33,7 +33,8 @@ let web_site = {
     button_template2 : $("#template2"),
     button_template3 : $("#template3"),
     button_template4 : $("#template4"),
-    nrf : 0,
+
+    str : "",
 }
 let automaton_DFA;
 let automaton_NFA = {
@@ -52,6 +53,32 @@ let automaton_NFA = {
     edges_done: [],
     // Обратные ребра
     rev_edges: [],
+}
+
+let del = () => {
+    console.log("delete...");
+    web_site.is_built = false;
+    change_page(web_site.DFA, web_site.NFA);
+
+    automaton_NFA.data = {
+        nodes: [],
+        edges: []
+    };
+    automaton_NFA.edges_symbols = [];
+    automaton_NFA.nodes_names.clear();
+    automaton_NFA.edges_done = [];
+    automaton_NFA.rev_edges = [];
+    automaton_NFA.alphabet.clear();
+    automaton_NFA.terms = [];
+    $(".automaton__edges").html(`<h1>Ребра:</h1>`);
+    $(web_site.automaton__nodes_names).html(`<h1>Вершины:</h1>`);
+    $(".automaton__nodes").html(`<h1>Какие состояния конечные?</h1>`);
+
+    rebuild_template1();
+    rebuild_template2();
+    rebuild_template3();
+    rebuild_template4();
+    change_temp(0);
 }
 
 let template1 = {
@@ -80,7 +107,6 @@ let rebuild_template1 = () => {
         terms : ["q3"],
     }
 }
-
 let template2 = {
     alphabet : new Set(["1", "0"]),
     data : {
@@ -107,7 +133,6 @@ let rebuild_template2 = () => {
         terms : ["q3"],
     }
 }
-
 let template3 = {
     alphabet : new Set(["1", "0"]),
     data : {
@@ -134,7 +159,6 @@ let rebuild_template3 = () => {
         terms : ["q3"],
     }
 }
-
 let template4 = {
     alphabet : new Set(["1", "0"]),
     data : {
@@ -161,7 +185,31 @@ let rebuild_template4 = () => {
         terms : ["q3"],
     }
 }
+let change_temp = (n) => {
+    if (n) del(); // $("#delete").click();
 
+    if (web_site.which_temp === 1) {
+        $(web_site.button_template1).removeClass("panel__btn--active");
+    } else if (web_site.which_temp === 2) {
+        $(web_site.button_template2).removeClass("panel__btn--active");
+    } else if (web_site.which_temp === 3) {
+        $(web_site.button_template3).removeClass("panel__btn--active");
+    } else if (web_site.which_temp === 4) {
+        $(web_site.button_template4).removeClass("panel__btn--active");
+    }
+
+    if (n === 1) {
+        $(web_site.button_template1).addClass("panel__btn--active");
+    } else if (n === 2) {
+        $(web_site.button_template2).addClass("panel__btn--active");
+    } else if (n === 3) {
+        $(web_site.button_template3).addClass("panel__btn--active");
+    } else if (n === 4) {
+        $(web_site.button_template4).addClass("panel__btn--active");
+    }
+    web_site.which_temp = n;
+    $(web_site.automaton__nodes_names).html(`<h1>Вершины:</h1>`);
+}
 let change_page = (page_from, page_to) => {
     $(page_from).removeClass("panel__btn--active");
     $(page_to).addClass("panel__btn--active");
@@ -183,9 +231,6 @@ let change_page = (page_from, page_to) => {
         $(web_site.automaton__pict2).removeClass("invisible");
         $(web_site.automaton__edges).addClass("invisible");
         $(web_site.automaton__nodes).addClass("invisible");
-
-        // $(web_site.automaton__pict).html(`<img src="images/DFA.png" alt="DFA">`);
-
     } else {
         $(web_site.automaton_check).addClass("invisible");
         $(web_site.automaton_check_form).addClass("invisible");
@@ -210,15 +255,6 @@ let change_page = (page_from, page_to) => {
     }
 }
 
-// $(web_site.NFA).click(() => {
-//     change_page(web_site.DFA, web_site.NFA);
-// })
-
-// $(web_site.DFA).click(() => {
-//     change_page(web_site.NFA, web_site.DFA);
-// })
-
-
 // Cигма автомата
 let sigma = (from, symb) => {
     let temp = [];
@@ -229,7 +265,6 @@ let sigma = (from, symb) => {
     }
     return temp;
 }
-
 let allEpsilon = (node) => {
     // console.log("node: ", node);
     let visited = new Set();
@@ -246,8 +281,8 @@ let allEpsilon = (node) => {
     goEpsilon(node);
     return visited;
 }
-
 let build_DFA = (automaton) => {
+    web_site.is_built = true;
     automaton_DFA = {
         data: {
             nodes: [],
@@ -383,19 +418,9 @@ let build_DFA = (automaton) => {
     }
     automaton_DFA.edges_symbols = automaton_DFA.normal_edges_symbols;
 }
-
-
 $(web_site.button_nfa_to_dfa).click(() => {
     change_page(web_site.NFA, web_site.DFA);
     build_DFA(automaton_NFA);
-    // console.log(automaton_NFA);
-    // console.log(automaton_DFA);
-
-    // var canvas = $(canvas).get(0);
-    // var ctx = canvas.getContext("2d");
-    // ctx.fillStyle = "white"; //белым цветом
-    // ctx.fillRect(0, 0, canvas.width, canvas.height); //закрашиваем всю область
-    // createCanvas(this.jQuery);
     createCanvas2(this.jQuery);
 
     for (let node of automaton_DFA.nodes_names) { // Печатаем новые вершины
@@ -403,30 +428,13 @@ $(web_site.button_nfa_to_dfa).click(() => {
     }
 })
 
-// let button_change = () => {
-//     if ($(web_site.from).val() && $(web_site.to).val() && $(web_site.symb).val()) {
-//         $(web_site.button_add).prop('disabled', false);
-//     } else {
-//         $(web_site.button_add).prop('disabled', true);
-//     }
-// }
-
-
-// "Добавить" работает толоко если все ввести
-// $(web_site.from).change(() => {
-//     button_change();
-// });
-// $(web_site.to).change(() => {
-    // button_change();
-// });
-// $(web_site.symb).change(() => {
-    // button_change();
-// });
-
 // "Кнопка добавить"
 $(web_site.button_add).click(() => {
-    // console.log($(web_site.from).val(),  $(web_site.to).val(),  $(web_site.symb).val());
-    // console.log(!$(web_site.from).val(), !$(web_site.to).val(), !$(web_site.symb).val());
+    // $(".automatonpict").html("");
+    // $(".automatonpict").html(`<canvas id="viewport" width="800" height="400"></canvas>`);
+    // $(".automatonpict2").html("");
+    // $(".automatonpict2").html(`<canvas id="viewport2" width="800" height="400"></canvas>`);
+    console.log("add ...");
     if (!$(web_site.from).val() || !$(web_site.to).val() || !$(web_site.symb).val()) { // Ошибка ввода ребер
         alert("Заполните все поля!");
         $(web_site.from).val("");
@@ -435,7 +443,7 @@ $(web_site.button_add).click(() => {
         return;
     }
     $(web_site.button_build).prop('disabled', false); // Делаем кнопку "Построить" доступной
-    // $(web_site.button_add).prop('disabled', true); // Делаем кнопку "Добавить" недоступной
+
 
     if (!automaton_NFA.nodes_names.has($(web_site.from).val())) {
         $(".automaton__nodes").append(
@@ -512,51 +520,17 @@ $(web_site.button_add).click(() => {
     $(web_site.symb).val("");
 
     $(web_site.button_nfa_to_dfa).prop('disabled', false);
-    web_site.is_built = true;
     createCanvas(this.jQuery);
 })
+$("#delete").click(() => {
+    // location.reload();
+    // $(".automatonpict").html("");
+    // $(".automatonpict").html(`<canvas id="viewport" width="800" height="400"></canvas>`);
+    // $(".automatonpict2").html("");
+    // $(".automatonpict2").html(`<canvas id="viewport2" width="800" height="400"></canvas>`);
+    del();
+})
 
-
-
-// $(".build-automaton").click((evt) => { // Построить
-//     evt.preventDefault();
-//     $(web_site.button_nfa_to_dfa).prop('disabled', false);
-//     web_site.is_built = true;
-//     createCanvas(this.jQuery);
-// });
-
-let change_temp = (n) => {
-    if (n) $("#delete").click();
-    // web_site.nrf = 1;
-    // $(".delete").click();
-
-    // var canvas = $(canvas).get(0);
-    // var ctx = canvas.getContext("2d");
-    // ctx.fillStyle = "white"; //белым цветом
-    // ctx.fillRect(0, 0, canvas.width, canvas.height); //закрашиваем всю область
-
-    if (web_site.which_temp === 1) {
-        $(web_site.button_template1).removeClass("panel__btn--active");
-    } else if (web_site.which_temp === 2) {
-        $(web_site.button_template2).removeClass("panel__btn--active");
-    } else if (web_site.which_temp === 3) {
-        $(web_site.button_template3).removeClass("panel__btn--active");
-    } else if (web_site.which_temp === 4) {
-        $(web_site.button_template4).removeClass("panel__btn--active");
-    }
-
-    if (n === 1) {
-        $(web_site.button_template1).addClass("panel__btn--active");
-    } else if (n === 2) {
-        $(web_site.button_template2).addClass("panel__btn--active");
-    } else if (n === 3) {
-        $(web_site.button_template3).addClass("panel__btn--active");
-    } else if (n === 4) {
-        $(web_site.button_template4).addClass("panel__btn--active");
-    }
-    web_site.which_temp = n;
-    $(web_site.automaton__nodes_names).html(`<h1>Вершины:</h1>`);
-}
 
 $(web_site.button_template1).click((evt) => {
     console.log(web_site.which_temp, 1);
@@ -567,13 +541,6 @@ $(web_site.button_template1).click((evt) => {
     automaton_NFA = template1;
     change_page(web_site.NFA, web_site.DFA);
     build_DFA(template1);
-    // console.log(automaton_NFA);
-    // console.log(automaton_DFA);
-
-    // var canvas = $(canvas).get(0);
-    // var ctx = canvas.getContext("2d");
-    // ctx.fillStyle = "white"; //белым цветом
-    // ctx.fillRect(0, 0, canvas.width, canvas.height); //закрашиваем всю область
     createCanvas(this.jQuery);
     createCanvas2(this.jQuery);
     for (let node of automaton_DFA.nodes_names) {
@@ -587,13 +554,7 @@ $(web_site.button_template2).click((evt) => {
     automaton_NFA = template2;
     change_page(web_site.NFA, web_site.DFA);
     build_DFA(template2);
-    // console.log(automaton_NFA);
-    // console.log(automaton_DFA);
 
-    // var canvas = $(canvas).get(0);
-    // var ctx = canvas.getContext("2d");
-    // ctx.fillStyle = "white"; //белым цветом
-    // ctx.fillRect(0, 0, canvas.width, canvas.height); //закрашиваем всю область
     createCanvas(this.jQuery);
     createCanvas2(this.jQuery);
     for (let node of automaton_DFA.nodes_names) {
@@ -607,13 +568,7 @@ $(web_site.button_template3).click((evt) => {
     automaton_NFA = template3;
     change_page(web_site.NFA, web_site.DFA);
     build_DFA(template3);
-    // console.log(automaton_NFA);
-    // console.log(automaton_DFA);
 
-    // var canvas = $(canvas).get(0);
-    // var ctx = canvas.getContext("2d");
-    // ctx.fillStyle = "white"; //белым цветом
-    // ctx.fillRect(0, 0, canvas.width, canvas.height); //закрашиваем всю область
     createCanvas(this.jQuery);
     createCanvas2(this.jQuery);
     for (let node of automaton_DFA.nodes_names) {
@@ -627,19 +582,42 @@ $(web_site.button_template4).click((evt) => {
     automaton_NFA = template4;
     change_page(web_site.NFA, web_site.DFA);
     build_DFA(template4);
-    // console.log(automaton_NFA);
-    // console.log(automaton_DFA);
 
-    // var canvas = $(canvas).get(0);
-    // var ctx = canvas.getContext("2d");
-    // ctx.fillStyle = "white"; //белым цветом
-    // ctx.fillRect(0, 0, canvas.width, canvas.height); //закрашиваем всю область
     createCanvas(this.jQuery);
     createCanvas2(this.jQuery);
     for (let node of automaton_DFA.nodes_names) {
         $(web_site.automaton__nodes_names).append(`<h1>${node} = ${automaton_DFA.nodes_pair.get(node).split(":")}</h1>`);
     }
 })
+
+let sigma2 = (from, symb)  => {
+    let temp = "";
+    for (let i = 0; i < automaton_DFA.edges_symbols.length; ++i) {
+        if (automaton_DFA.edges_symbols[i].split(":")[2].split(", ").includes(symb) && automaton_DFA.edges_symbols[i].split(":")[0] === from) {
+            temp = automaton_DFA.edges_symbols[i].split(":")[1];
+            return temp;
+        }
+    }
+    return temp;
+}
+$(".check").click(() => {
+    web_site.str = $(".check-form").val();
+    let temp_node = automaton_DFA.data.nodes[0].name;
+    for (let i = 0; i < web_site.str.length; ++i) {
+        temp_node = sigma2(temp_node, web_site.str[i]);
+        if (!temp_node) {
+            alert("Не допускает");
+            return;
+        }
+    }
+    if (automaton_DFA.terms.includes(temp_node)) {
+        alert("Допускает");
+    } else {
+        alert("Не допускает");
+    }
+})
+
+
 
 function createCanvas($) {
     let rebuild = false;
@@ -671,60 +649,33 @@ function createCanvas($) {
                     })
                 }
 
-                $(".build-automaton").click((evt) => {
-                    evt.preventDefault();
-                    rebuild = true;
-                });
-
                 $(".draw-form__add").click((evt) => {
                     evt.preventDefault();
                     rebuild = true;
                 });
 
+                $(web_site.button_template1).click((evt) => {
+                    rebuild = true;
+                })
+                $(web_site.button_template2).click((evt) => {
+                    rebuild = true;
+                })
+                $(web_site.button_template3).click((evt) => {
+                    rebuild = true;
+                })
+                $(web_site.button_template4).click((evt) => {
+                    rebuild = true;
+                })
+
                 if (rebuild) return;
 
                 $(".delete").click((evt) => {
-                    // location.reload();
-                    // return;
-                    console.log("log1");
-                    web_site.is_built = false;
-                    change_page(web_site.DFA, web_site.NFA);
-                    evt.preventDefault();
-                    automaton_NFA.data = {
-                        nodes: [],
-                        edges: []
-                    };
-                    automaton_NFA.edges_symbols = [];
-                    automaton_NFA.nodes_names.clear();
-                    automaton_NFA.edges_done = [];
-                    automaton_NFA.rev_edges = [];
-                    automaton_NFA.alphabet.clear();
-                    $(".automaton__edges").html(`<h1>Ребра:</h1>`);
-                    $(web_site.automaton__nodes_names).html(`<h1>Вершины:</h1>`);
-                    $(".automaton__nodes").html(`<h1>Какие состояния конечные?</h1>`);
-                    ctx.fillStyle = "white"; //белым цветом
-                    ctx.fillRect(0, 0, canvas.width, canvas.height); //закрашиваем всю область
                     rm = true;
-                    rebuild_template1();
-                    rebuild_template2();
-                    rebuild_template3();
-                    rebuild_template4();
-                    change_temp(0);
-                });
+                })
 
                 if (rm) return;
 
-                // if (web_site.nrf) {
-                //     ctx.fillStyle = "white"; //белым цветом
-                //     ctx.fillRect(0, 0, canvas.width, canvas.height); //закрашиваем всю область
-                //     rebuild_template1();
-                //     rebuild_template2();
-                //     rebuild_template3();
-                //     rebuild_template4();
-                // }
-                // web_site.nrf = 0;
 
-                //действия при перересовке
                 ctx.fillStyle = "white"; //белым цветом
                 ctx.fillRect(0, 0, canvas.width, canvas.height); //закрашиваем всю область
 
@@ -735,7 +686,6 @@ function createCanvas($) {
                         if (!automaton_NFA.edges_done.includes(temp) && !automaton_NFA.edges_done.includes(rev_temp)) {
                             automaton_NFA.edges_done.push(temp);
                         }
-
 
                         if (pt1.x === pt2.x && pt1.y === pt2.y) {
                             canvas_loop(ctx, pt1);
@@ -860,7 +810,6 @@ function createCanvas($) {
                     });
 
             },
-
             initMouseHandling: function () { //события с мышью
                 var dragged = null;   //вершина которую перемещают
                 var handler = {
@@ -906,7 +855,7 @@ function createCanvas($) {
 
     $(document).ready(function () {
 
-        sys = arbor.ParticleSystem(1000, 600, 0.5, false, 120, 0.02, 0.6);
+        sys = arbor.ParticleSystem(1000, 600, 0.5, false, 60, 0.02, 0.6);
 
         sys.renderer = Renderer("#viewport"); //начинаем рисовать в выбраной области
 
@@ -927,12 +876,11 @@ function createCanvas($) {
         return;
     }
 }
-
 function createCanvas2($) {
     let rebuild = false;
     let rm = false;
 
-    var Renderer2 = function (canvas) {
+    var Renderer = function (canvas) {
         var canvas = $(canvas).get(0);
         var ctx = canvas.getContext("2d");
         var particleSystem;
@@ -943,7 +891,7 @@ function createCanvas2($) {
                 particleSystem = system;
                 particleSystem.screenSize(canvas.width, canvas.height);
                 particleSystem.screenPadding(80);
-                that.initMouseHandling2();
+                that.initMouseHandling();
             },
 
             redraw: function () {
@@ -958,35 +906,32 @@ function createCanvas2($) {
                     })
                 }
 
+
+                $(web_site.button_template1).click((evt) => {
+                    rebuild = true;
+                })
+                $(web_site.button_template2).click((evt) => {
+                    rebuild = true;
+                })
+                $(web_site.button_template3).click((evt) => {
+                    rebuild = true;
+                })
+                $(web_site.button_template4).click((evt) => {
+                    rebuild = true;
+                })
+                $(".draw-form__add").click((evt) => {
+                    evt.preventDefault();
+                    rebuild = true;
+                });
+
                 if (rebuild) return;
 
                 $(".delete").click((evt) => {
-                    console.log("log2");
-                    evt.preventDefault();
-                    automaton_DFA.data = {
-                        nodes: [],
-                        edges: []
-                    };
-                    automaton_DFA.edges_symbols = [];
-                    automaton_DFA.nodes_names.clear();
-                    automaton_DFA.edges_done = [];
-                    automaton_DFA.rev_edges = [];
-                    automaton_DFA.alphabet.clear();
-                    $(".automaton__edges").html(`<h1>Ребра:</h1>`);
-                    $(".automaton__nodes").html(`<h1>Какие состояния конечные?</h1>`);
-                    ctx.fillStyle = "white"; //белым цветом
-                    ctx.fillRect(0, 0, canvas.width, canvas.height); //закрашиваем всю область
                     rm = true;
-                    rebuild_template1();
-                    rebuild_template2();
-                    rebuild_template3();
-                    rebuild_template4();
-                    change_temp(0);
-                });
+                })
 
                 if (rm) return;
 
-                //действия при перерисовке
                 ctx.fillStyle = "white"; //белым цветом
                 ctx.fillRect(0, 0, canvas.width, canvas.height); //закрашиваем всю область
 
@@ -997,7 +942,6 @@ function createCanvas2($) {
                         if (!automaton_DFA.edges_done.includes(temp) && !automaton_DFA.edges_done.includes(rev_temp)) {
                             automaton_DFA.edges_done.push(temp);
                         }
-
 
                         if (pt1.x === pt2.x && pt1.y === pt2.y) {
                             canvas_loop(ctx, pt1);
@@ -1123,7 +1067,7 @@ function createCanvas2($) {
 
             },
 
-            initMouseHandling2: function () { //события с мышью
+            initMouseHandling: function () { //события с мышью
                 var dragged = null;   //вершина которую перемещают
                 var handler = {
                     clicked: function (e) { //нажали
@@ -1168,9 +1112,9 @@ function createCanvas2($) {
 
     $(document).ready(function () {
 
-        sys = arbor.ParticleSystem(1000, 600, 0.5, false, 120, 0.02, 0.6);
+        sys = arbor.ParticleSystem(1000, 600, 0.5, false, 60, 0.02, 0.6);
 
-        sys.renderer = Renderer2("#viewport2"); //начинаем рисовать в выбраной области
+        sys.renderer = Renderer("#viewport2"); //начинаем рисовать в выбраной области
 
         (() => {
             $.each(automaton_DFA.data.nodes, function (i, node) {
@@ -1181,8 +1125,6 @@ function createCanvas2($) {
                 sys.addEdge(sys.getNode(edge.src), sys.getNode(edge.dest)); //добавляем грань
             });
         })();
-
-
     })
 
     if (rm || rebuild) {

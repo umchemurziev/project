@@ -248,6 +248,10 @@ body {
     margin-left: 5px;
 }
 
+.footer {
+    padding-top: 10px;
+    background-color: aquamarine;
+}
 /* Footer */
 .footer .logo-cp {
     width: 99%;

@@ -1125,12 +1125,3 @@ function createCanvas2($) {
         return;
     }
 }
-
-
-
-
-
-
-
-
-

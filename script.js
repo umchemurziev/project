@@ -1063,7 +1063,6 @@ function createCanvas2($) {
                         var pos = $(canvas).offset(); //получаем позицию canvas
                         _mouseP = arbor.Point(e.pageX - pos.left, e.pageY - pos.top); //и позицию нажатия кнопки относительно canvas
                         dragged = particleSystem.nearest(_mouseP); //определяем ближайшую вершину к нажатию
-                        console.log(dragged.node.name);
                         automaton_NFA.vis_nodes = automaton_DFA.nodes_pair.get(dragged.node.name)?.split(":");
 
                         if (dragged && dragged.node !== null) {
@@ -1085,7 +1084,6 @@ function createCanvas2($) {
                         return false;
                     },
                     dropped: function (e) { //отпустили
-                        console.log(dragged.node.name);
                         automaton_NFA.vis_nodes = [];
                         if (dragged === null || dragged.node === undefined) return; //если не перемещали, то уходим
                         if (dragged.node !== null) dragged.node.fixed = false; //если перемещали - отпускаем

@@ -53,10 +53,12 @@ let automaton_NFA = {
     edges_done: [],
     // Обратные ребра
     rev_edges: [],
+
+    // что подсвечивается
+    vis_nodes: [],
 }
 
 let del = () => {
-    console.log("delete...");
     web_site.is_built = false;
     change_page(web_site.DFA, web_site.NFA);
 
@@ -88,7 +90,7 @@ let template1 = {
         edges : [ { src: "S", dest: "q1" }, { src: "S", dest: "q2" }, { src: "q2", dest: "q4" }, { src: "q4", dest: "q3" }, { src: "q1", dest: "q3" }, { src: "S", dest: "q3" }, { src: "q3", dest: "S" } ],
     },
     edges_done : ["S:q1", "S:q2", "q2:q4", "q4:q3", "q1:q3", "S:q3"],
-    edges_symbols : ["S:q1:1", "S:q2:0", "q2:q4:0", "q4:q3:∑", "q1:q3:∑", "S:q3:∑", "q3:S:∑"],
+    edges_symbols : ["S:q1:1", "S:q2:0", "q2:q4:0", "q4:q3:દ", "q1:q3:દ", "S:q3:દ", "q3:S:દ"],
     nodes_names : new Set(["S", "q1", "q2", "q4", "q3"]),
     rev_edges : ["S:q3"],
     terms : ["q3"],
@@ -101,88 +103,88 @@ let rebuild_template1 = () => {
             edges : [ { src: "S", dest: "q1" }, { src: "S", dest: "q2" }, { src: "q2", dest: "q4" }, { src: "q4", dest: "q3" }, { src: "q1", dest: "q3" }, { src: "S", dest: "q3" }, { src: "q3", dest: "S" } ],
         },
         edges_done : ["S:q1", "S:q2", "q2:q4", "q4:q3", "q1:q3", "S:q3"],
-        edges_symbols : ["S:q1:1", "S:q2:0", "q2:q4:0", "q4:q3:∑", "q1:q3:∑", "S:q3:∑", "q3:S:∑"],
+        edges_symbols : ["S:q1:1", "S:q2:0", "q2:q4:0", "q4:q3:દ", "q1:q3:દ", "S:q3:દ", "q3:S:દ"],
         nodes_names : new Set(["S", "q1", "q2", "q4", "q3"]),
         rev_edges : ["S:q3"],
         terms : ["q3"],
     }
 }
 let template2 = {
-    alphabet : new Set(["1", "0"]),
+    alphabet : new Set(["a", "b"]),
     data : {
-        nodes : [ { name: "S" }, { name: "q1" }, { name: "q2" }, { name: "q4" }, { name: "q3" } ],
-        edges : [ { src: "S", dest: "q1" }, { src: "S", dest: "q2" }, { src: "q2", dest: "q4" }, { src: "q4", dest: "q3" }, { src: "q1", dest: "q3" }, { src: "S", dest: "q3" }, { src: "q3", dest: "S" } ],
+        nodes : [ { name: "S" }, { name: "q1" }, { name: "q2" }, { name: "q3" } ],
+        edges : [ { src: "S", dest: "q1" }, { src: "S", dest: "q2" }, {src: "q2", dest: "q3"}, {src: "q3", dest: "q1"} ],
     },
-    edges_done : ["S:q1", "S:q2", "q2:q4", "q4:q3", "q1:q3", "S:q3"],
-    edges_symbols : ["S:q1:1", "S:q2:0", "q2:q4:0", "q4:q3:∑", "q1:q3:∑", "S:q3:∑", "q3:S:∑"],
-    nodes_names : new Set(["S", "q1", "q2", "q4", "q3"]),
-    rev_edges : ["S:q3"],
+    edges_done : ["S:q1", "S:q2", "q2:q3", "q3:q1"],
+    edges_symbols : ["S:q1:a", "S:q2:a", "q2:q3:b", "q3:q1:દ"],
+    nodes_names : new Set(["S", "q1", "q2", "q3"]),
+    rev_edges : [],
     terms : ["q3"],
 }
 let rebuild_template2 = () => {
     template2 = {
-        alphabet : new Set(["1", "0"]),
+        alphabet : new Set(["a", "b"]),
         data : {
-            nodes : [ { name: "S" }, { name: "q1" }, { name: "q2" }, { name: "q4" }, { name: "q3" } ],
-            edges : [ { src: "S", dest: "q1" }, { src: "S", dest: "q2" }, { src: "q2", dest: "q4" }, { src: "q4", dest: "q3" }, { src: "q1", dest: "q3" }, { src: "S", dest: "q3" }, { src: "q3", dest: "S" } ],
+            nodes : [ { name: "S" }, { name: "q1" }, { name: "q2" }, { name: "q3" } ],
+            edges : [ { src: "S", dest: "q1" }, { src: "S", dest: "q2" }, {src: "q2", dest: "q3"}, {src: "q3", dest: "q1"} ],
         },
-        edges_done : ["S:q1", "S:q2", "q2:q4", "q4:q3", "q1:q3", "S:q3"],
-        edges_symbols : ["S:q1:1", "S:q2:0", "q2:q4:0", "q4:q3:∑", "q1:q3:∑", "S:q3:∑", "q3:S:∑"],
-        nodes_names : new Set(["S", "q1", "q2", "q4", "q3"]),
-        rev_edges : ["S:q3"],
+        edges_done : ["S:q1", "S:q2", "q2:q3", "q3:q1"],
+        edges_symbols : ["S:q1:a", "S:q2:a", "q2:q3:b", "q3:q1:દ"],
+        nodes_names : new Set(["S", "q1", "q2", "q3"]),
+        rev_edges : [],
         terms : ["q3"],
     }
 }
 let template3 = {
-    alphabet : new Set(["1", "0"]),
+    alphabet : new Set(["a", "b", "c"]),
     data : {
-        nodes : [ { name: "S" }, { name: "q1" }, { name: "q2" }, { name: "q4" }, { name: "q3" } ],
-        edges : [ { src: "S", dest: "q1" }, { src: "S", dest: "q2" }, { src: "q2", dest: "q4" }, { src: "q4", dest: "q3" }, { src: "q1", dest: "q3" }, { src: "S", dest: "q3" }, { src: "q3", dest: "S" } ],
+        nodes : [ { name: "S" }, { name: "q1" }, { name: "q2" }, { name: "q3" } ],
+        edges : [ { src: "S", dest: "q1" }, {src: "q1", dest: "q2"}, { src: "q2", dest: "q3" }, { src: "q3", dest: "q3" }, { src: "q3", dest: "q3" }, { src: "q3", dest: "q1" } ],
     },
-    edges_done : ["S:q1", "S:q2", "q2:q4", "q4:q3", "q1:q3", "S:q3"],
-    edges_symbols : ["S:q1:1", "S:q2:0", "q2:q4:0", "q4:q3:∑", "q1:q3:∑", "S:q3:∑", "q3:S:∑"],
-    nodes_names : new Set(["S", "q1", "q2", "q4", "q3"]),
-    rev_edges : ["S:q3"],
-    terms : ["q3"],
+    edges_done : ["S:q1", "q1:q2", "q2:q3", "q3:q3", "q3:q1"],
+    edges_symbols : ["S:q1:a", "q1:q2:b", "q2:q3:c", "q3:q3:a, b", "q3:q1:a"],
+    nodes_names : new Set(["S", "q1", "q2", "q3"]),
+    rev_edges : [],
+    terms : ["q2"],
 }
 let rebuild_template3 = () => {
     template3 = {
-        alphabet : new Set(["1", "0"]),
+        alphabet : new Set(["a", "b", "c"]),
         data : {
-            nodes : [ { name: "S" }, { name: "q1" }, { name: "q2" }, { name: "q4" }, { name: "q3" } ],
-            edges : [ { src: "S", dest: "q1" }, { src: "S", dest: "q2" }, { src: "q2", dest: "q4" }, { src: "q4", dest: "q3" }, { src: "q1", dest: "q3" }, { src: "S", dest: "q3" }, { src: "q3", dest: "S" } ],
+            nodes : [ { name: "S" }, { name: "q1" }, { name: "q2" }, { name: "q3" } ],
+            edges : [ { src: "S", dest: "q1" }, {src: "q1", dest: "q2"}, { src: "q2", dest: "q3" }, { src: "q3", dest: "q3" }, { src: "q3", dest: "q3" }, { src: "q3", dest: "q1" } ],
         },
-        edges_done : ["S:q1", "S:q2", "q2:q4", "q4:q3", "q1:q3", "S:q3"],
-        edges_symbols : ["S:q1:1", "S:q2:0", "q2:q4:0", "q4:q3:∑", "q1:q3:∑", "S:q3:∑", "q3:S:∑"],
-        nodes_names : new Set(["S", "q1", "q2", "q4", "q3"]),
-        rev_edges : ["S:q3"],
-        terms : ["q3"],
+        edges_done : ["S:q1", "q1:q2", "q2:q3", "q3:q3", "q3:q1"],
+        edges_symbols : ["S:q1:a", "q1:q2:b", "q2:q3:c", "q3:q3:a, b", "q3:q1:a"],
+        nodes_names : new Set(["S", "q1", "q2", "q3"]),
+        rev_edges : [],
+        terms : ["q2"],
     }
 }
 let template4 = {
-    alphabet : new Set(["1", "0"]),
+    alphabet : new Set(["a", "b"]),
     data : {
-        nodes : [ { name: "S" }, { name: "q1" }, { name: "q2" }, { name: "q4" }, { name: "q3" } ],
-        edges : [ { src: "S", dest: "q1" }, { src: "S", dest: "q2" }, { src: "q2", dest: "q4" }, { src: "q4", dest: "q3" }, { src: "q1", dest: "q3" }, { src: "S", dest: "q3" }, { src: "q3", dest: "S" } ],
+        nodes : [ { name: "S" }, { name: "q1" }, { name: "q2" } ],
+        edges : [ { src: "S", dest: "q1" }, { src: "S", dest: "q2" }, {src: "S", dest: "q1"}, {src: "q1", dest: "q1"}, {src: "q2", dest: "S"} ],
     },
-    edges_done : ["S:q1", "S:q2", "q2:q4", "q4:q3", "q1:q3", "S:q3"],
-    edges_symbols : ["S:q1:1", "S:q2:0", "q2:q4:0", "q4:q3:∑", "q1:q3:∑", "S:q3:∑", "q3:S:∑"],
+    edges_done : ["S:q1", "S:q2", "q1:q1"],
+    edges_symbols : ["S:q1:a, b", "S:q2:a", "q1:q1:a", "q2:S:દ"],
     nodes_names : new Set(["S", "q1", "q2", "q4", "q3"]),
-    rev_edges : ["S:q3"],
-    terms : ["q3"],
+    rev_edges : ["S:q2"],
+    terms : ["S"],
 }
 let rebuild_template4 = () => {
     template4 = {
-        alphabet : new Set(["1", "0"]),
+        alphabet : new Set(["a", "b"]),
         data : {
-            nodes : [ { name: "S" }, { name: "q1" }, { name: "q2" }, { name: "q4" }, { name: "q3" } ],
-            edges : [ { src: "S", dest: "q1" }, { src: "S", dest: "q2" }, { src: "q2", dest: "q4" }, { src: "q4", dest: "q3" }, { src: "q1", dest: "q3" }, { src: "S", dest: "q3" }, { src: "q3", dest: "S" } ],
+            nodes : [ { name: "S" }, { name: "q1" }, { name: "q2" } ],
+            edges : [ { src: "S", dest: "q1" }, { src: "S", dest: "q2" }, {src: "S", dest: "q1"}, {src: "q1", dest: "q1"}, {src: "q2", dest: "S"} ],
         },
-        edges_done : ["S:q1", "S:q2", "q2:q4", "q4:q3", "q1:q3", "S:q3"],
-        edges_symbols : ["S:q1:1", "S:q2:0", "q2:q4:0", "q4:q3:∑", "q1:q3:∑", "S:q3:∑", "q3:S:∑"],
+        edges_done : ["S:q1", "S:q2", "q1:q1"],
+        edges_symbols : ["S:q1:a, b", "S:q2:a", "q1:q1:a", "q2:S:દ"],
         nodes_names : new Set(["S", "q1", "q2", "q4", "q3"]),
-        rev_edges : ["S:q3"],
-        terms : ["q3"],
+        rev_edges : ["S:q2"],
+        terms : ["S"],
     }
 }
 let change_temp = (n) => {
@@ -266,18 +268,16 @@ let sigma = (from, symb) => {
     return temp;
 }
 let allEpsilon = (node) => {
-    // console.log("node: ", node);
     let visited = new Set();
     let goEpsilon = (node) => {
         visited.add(node);
-        let edges = sigma(node, "∑");
+        let edges = sigma(node, "દ");
         for (let i = 0; i < edges.length; ++i) {
             if (!visited.has(edges[i])) {
                 goEpsilon(edges[i]);
             }
         }
     }
-    // console.log("visited: ", visited);
     goEpsilon(node);
     return visited;
 }
@@ -308,7 +308,6 @@ let build_DFA = (automaton) => {
     let s = allEpsilon(automaton.data.nodes[0].name);
     let P;
     P = [];
-    // console.log("s = ", s);
     P.push(s);
     let Q_d = [];
     while (P.length) {
@@ -331,7 +330,6 @@ let build_DFA = (automaton) => {
                     }
                 }
             }
-            // console.log("p_d = ", p_d, ", q_d = ", q_d, ",c = ", c);
             let p_d_str = "";
             for (let word of p_d) {
                 if (p_d_str.length) {
@@ -360,7 +358,6 @@ let build_DFA = (automaton) => {
                 }
                 if (flag) automaton_DFA.edges_symbols.push(tutu);
             }
-            // console.log(tutu);
             if (!Q_d.includes(q_d_str) && q_d.size) {
                 P.push(q_d);
                 Q_d.push(q_d_str);
@@ -430,11 +427,6 @@ $(web_site.button_nfa_to_dfa).click(() => {
 
 // "Кнопка добавить"
 $(web_site.button_add).click(() => {
-    // $(".automatonpict").html("");
-    // $(".automatonpict").html(`<canvas id="viewport" width="800" height="400"></canvas>`);
-    // $(".automatonpict2").html("");
-    // $(".automatonpict2").html(`<canvas id="viewport2" width="800" height="400"></canvas>`);
-    console.log("add ...");
     if (!$(web_site.from).val() || !$(web_site.to).val() || !$(web_site.symb).val()) { // Ошибка ввода ребер
         alert("Заполните все поля!");
         $(web_site.from).val("");
@@ -459,7 +451,7 @@ $(web_site.button_add).click(() => {
     }
 
     automaton_NFA.nodes_names.add($(web_site.to).val());
-    if ($(web_site.symb).val() !== "∑") automaton_NFA.alphabet.add($(web_site.symb).val());
+    if ($(web_site.symb).val() !== "દ") automaton_NFA.alphabet.add($(web_site.symb).val());
 
     // Добавляем новые символы перехода
     let need_new_edge = true;
@@ -468,7 +460,6 @@ $(web_site.button_add).click(() => {
         prev_s = prev_s[2].split(", ");
         let c = $(web_site.symb).val();
         if (automaton_NFA.edges_symbols[i].split(":")[0] === $(web_site.from).val() && automaton_NFA.edges_symbols[i].split(":")[1] === $(web_site.to).val()) {
-            console.log(prev_s, !prev_s.includes(c));
             if (!prev_s.includes(c)) automaton_NFA.edges_symbols[i] += ", " + c;
             need_new_edge = false;
         }
@@ -533,7 +524,6 @@ $("#delete").click(() => {
 
 
 $(web_site.button_template1).click((evt) => {
-    console.log(web_site.which_temp, 1);
     if (web_site.which_temp === 1) return;
 
 
@@ -548,7 +538,6 @@ $(web_site.button_template1).click((evt) => {
     }
 })
 $(web_site.button_template2).click((evt) => {
-    console.log(web_site.which_temp, 2);
     if (web_site.which_temp === 2) return;
     change_temp(2);
     automaton_NFA = template2;
@@ -562,7 +551,6 @@ $(web_site.button_template2).click((evt) => {
     }
 })
 $(web_site.button_template3).click((evt) => {
-    console.log(web_site.which_temp, 3);
     if (web_site.which_temp === 3) return;
     change_temp(3);
     automaton_NFA = template3;
@@ -576,7 +564,6 @@ $(web_site.button_template3).click((evt) => {
     }
 })
 $(web_site.button_template4).click((evt) => {
-    console.log(web_site.which_temp, 4);
     if (web_site.which_temp === 4) return;
     change_temp(4);
     automaton_NFA = template4;
@@ -794,7 +781,9 @@ function createCanvas($) {
 
                         ctx.beginPath();
                         ctx.arc(pt.x, pt.y, w, 0, 2 * Math.PI);
-                        if (automaton_NFA.terms.includes(node.name)) {
+                        if (automaton_NFA.vis_nodes?.includes(node.name)) {
+                            ctx.fillStyle = "#6d58c4";
+                        } else if (automaton_NFA.terms.includes(node.name)) {
                             ctx.fillStyle = "#00ff00";
                         } else if (automaton_NFA.data.nodes[0].name === node.name) {
                             ctx.fillStyle = "#ff0000";
@@ -1074,6 +1063,9 @@ function createCanvas2($) {
                         var pos = $(canvas).offset(); //получаем позицию canvas
                         _mouseP = arbor.Point(e.pageX - pos.left, e.pageY - pos.top); //и позицию нажатия кнопки относительно canvas
                         dragged = particleSystem.nearest(_mouseP); //определяем ближайшую вершину к нажатию
+                        console.log(dragged.node.name);
+                        automaton_NFA.vis_nodes = automaton_DFA.nodes_pair.get(dragged.node.name)?.split(":");
+
                         if (dragged && dragged.node !== null) {
                             dragged.node.fixed = true; //фиксируем её
                         }
@@ -1093,6 +1085,8 @@ function createCanvas2($) {
                         return false;
                     },
                     dropped: function (e) { //отпустили
+                        console.log(dragged.node.name);
+                        automaton_NFA.vis_nodes = [];
                         if (dragged === null || dragged.node === undefined) return; //если не перемещали, то уходим
                         if (dragged.node !== null) dragged.node.fixed = false; //если перемещали - отпускаем
                         dragged = null; //очищаем
@@ -1131,3 +1125,12 @@ function createCanvas2($) {
         return;
     }
 }
+
+
+
+
+
+
+
+
+
